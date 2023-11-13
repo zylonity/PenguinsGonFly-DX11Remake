@@ -186,6 +186,13 @@ bool WinUtil::BeginLoop(bool& canUpdateRender)
 	MSG msg = { 0 };
 	canUpdateRender = false;
 
+	
+	//had to flip this around because it means moving the mouse would stop the game from rendering.
+	if (!mWinData.appPaused)
+	{
+		canUpdateRender = true;
+	}
+
 	// If there are Window messages then process them.
 	if (PeekMessage(&msg, 0, 0, 0, PM_REMOVE))
 	{
@@ -196,10 +203,7 @@ bool WinUtil::BeginLoop(bool& canUpdateRender)
 		return true;
 	}
 
-	if (!mWinData.appPaused)
-	{
-		canUpdateRender = true;
-	}
+
 
 	return true;
 }

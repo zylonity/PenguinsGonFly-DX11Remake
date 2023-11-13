@@ -14,7 +14,11 @@
 #include "SpriteFont.h"
 #include "DDSTextureLoader.h"
 #include "CommonStates.h"
+#include "Mouse.h"
+#include "Keyboard.h"
 
+
+#include "sprite.h"
 
 using namespace std;
 using namespace DirectX;
@@ -23,138 +27,6 @@ using namespace DirectX::SimpleMath;
 
 const int ASCII_ESC = 27;
 
-
-//Normal sprite class, just displays image
-class Sprite {
-private:
-	Vector2 winSize = Vector2(1280, 720);
-	
-protected:
-	Vector2 pos;
-	ID3D11ShaderResourceView* pT = nullptr;
-	MyD3D d3d;
-	bool isAlpha;
-
-
-	ID3D11Resource* resource;
-	ID3D11Texture2D* text2D;
-	D3D11_TEXTURE2D_DESC desc;
-
-public:
-	bool scaleHeightToWindow = false;
-	bool scaleWidthToWindow = false;
-	
-	RECT sprRect = RECT();
-	
-	float scale = 1.0f;
-	
-	Sprite(Vector2 globPos, ID3D11ShaderResourceView* textPointer, MyD3D& d3dToPass, bool alpha = false) {
-		pos = globPos;
-		pT = textPointer;
-		d3d = d3dToPass;
-		isAlpha = alpha;
-		
-		pT->GetResource(&resource);
-		resource->QueryInterface<ID3D11Texture2D>(&text2D);
-
-		text2D->GetDesc(&desc);
-		
-		sprRect.left = 0;
-		sprRect.top = 0;
-		sprRect.right = desc.Width;
-		sprRect.bottom = desc.Height;
-	}
-
-	void Render() {
-		//Grabs the Texture2D and grabs the description for the resolution
-		
-		if (scaleHeightToWindow) {
-			scale = winSize.y / desc.Height;
-		}
-
-		if (scaleWidthToWindow) {
-			scale = winSize.x / desc.Width;
-		}
-		
-		std::unique_ptr<SpriteBatch> spriteBatch;
-		spriteBatch = std::make_unique<SpriteBatch>(&d3d.GetDeviceCtx());
-
-		if (isAlpha == true) {
-			CommonStates dxstate(&d3d.GetDevice());
-			spriteBatch->Begin(SpriteSortMode_Deferred, dxstate.NonPremultiplied(), dxstate.PointClamp());
-		}
-		else {
-			spriteBatch->Begin();
-		}
-		
-		
-
-
-		spriteBatch->Draw(pT, pos, &sprRect, Colors::White, 0.0f, Vector2(0, 0), scale);
-
-		spriteBatch->End();
-
-	}
-
-};
-
-
-//Animated sprite class
-class AnimSprite : public Sprite {
-	int spriteAmount;
-	//Makes an array of each sprite in the image
-	vector<RECT> spriteRects;
-	
-public:
-	float speed = 10.0f;
-	
-	AnimSprite(Vector2 globPos, int sprAmount, ID3D11ShaderResourceView* textPointer, MyD3D& d3dToPass, bool alpha = false) : Sprite(globPos, textPointer, d3dToPass){
-		pos = globPos;
-		spriteAmount = sprAmount;
-		pT = textPointer;
-		d3d = d3dToPass;
-		isAlpha = alpha;
-	}
-	
-	void Render() {
-
-
-
-		//Adds each image to the array
-		for (int i = 0; i < spriteAmount; i++) {
-			spriteRects.push_back(RECT());
-			spriteRects[i].left = i * (desc.Width / spriteAmount);
-			spriteRects[i].top = 0;
-			spriteRects[i].bottom = desc.Height;
-			spriteRects[i].right = (i + 1) * (desc.Width / spriteAmount);
-		}
-		
-		std::unique_ptr<SpriteBatch> spriteBatch;
-		spriteBatch = std::make_unique<SpriteBatch>(&d3d.GetDeviceCtx());
-
-
-
-		
-		if (isAlpha == true) {
-			//Gets device states, makes it transparent and makes the upscaling point clamp so it doesnt blur
-			CommonStates dxstate(&d3d.GetDevice());
-			spriteBatch->Begin(SpriteSortMode_Deferred, dxstate.NonPremultiplied(), dxstate.PointClamp());
-		}
-		else {
-			spriteBatch->Begin();
-		}
-
-
-		float currentTime = GetClock();
-		int currentSprite = (int)(currentTime * speed) % spriteAmount;
-
-		spriteBatch->Draw(pT, pos, &spriteRects[currentSprite], Colors::White, 0.0f, Vector2(0, 0), scale);
-
-		spriteBatch->End();
-
-	}
-
-};
 
 int randomNumber(int a, int b = 0) {
 
@@ -183,31 +55,88 @@ int randomNumber(int a, int b = 0) {
 
 class Game {
 
-	ID3D11ShaderResourceView* textures[2];
+	ID3D11ShaderResourceView* textures[7];
 
 	vector<Sprite> sprites;
-	vector<AnimSprite> animSprites;
+	std::unique_ptr<DirectX::Keyboard> m_keyboard;
+	std::unique_ptr<DirectX::Mouse> m_mouse;
+
+	vector<float> bgTimers;
+	vector<float> scrollSpeeds;
+	float bgScale = 6;
 
 public:
 	Game(MyD3D& d3d)
 	{
 		DDS_ALPHA_MODE alpha;
 
+		m_keyboard = std::make_unique<Keyboard>();
+		m_mouse = std::make_unique<Mouse>();
+		//m_mouse->SetWindow(window);
+		
 		//Make background texture
-		if (CreateDDSTextureFromFile(&(d3d.GetDevice()), L"bin/data/Background/sky.dds", nullptr, &textures[1], 0, &alpha) != S_OK)
+		if (CreateDDSTextureFromFile(&(d3d.GetDevice()), L"bin/data/Background/sky.dds", nullptr, &textures[0], 0, &alpha) != S_OK)
 			assert(false);
 		
-		sprites.push_back(Sprite::Sprite(Vector2(0, 0), textures[1], d3d, false));
-		sprites[0].scaleHeightToWindow = true;
+		sprites.push_back(Sprite::Sprite(Vector2(0, 0), Vector2(1280, 720), textures[0], d3d));
+		sprites[0].scale = bgScale;
+		sprites[0].sprRect.right *= 2;
+		bgTimers.push_back(0);
+		scrollSpeeds.push_back(100);
 
-		//Make player texture
-		if (CreateDDSTextureFromFile(&(d3d.GetDevice()), L"bin/data/Entities/birdneutralsprite.dds", nullptr, &textures[0], 0, &alpha) != S_OK)
+		
+		//Clouds
+		if (CreateDDSTextureFromFile(&(d3d.GetDevice()), L"bin/data/Background/TinyCloud5.dds", nullptr, &textures[1], 0, &alpha) != S_OK)
 			assert(false);
 
-		assert(textures[0]);
+		sprites.push_back(Sprite::Sprite(Vector2(0, 0), Vector2(1280, 720), textures[1], d3d, true));
+		sprites[1].scale = bgScale;
+		sprites[1].sprRect.right *= 2;
+		bgTimers.push_back(0);
+		scrollSpeeds.push_back(110);
+		
+		
+		if (CreateDDSTextureFromFile(&(d3d.GetDevice()), L"bin/data/Background/SmallCloud3.dds", nullptr, &textures[2], 0, &alpha) != S_OK)
+			assert(false);
 
-		animSprites.push_back(AnimSprite::AnimSprite(Vector2(500,500), 5, textures[0], d3d, true));
-		animSprites[0].scale = 4.0f;
+		sprites.push_back(Sprite::Sprite(Vector2(0, 0), Vector2(1280, 720), textures[2], d3d, true));
+		sprites[2].scale = bgScale;
+		sprites[2].sprRect.right *= 2;
+		bgTimers.push_back(0);
+		scrollSpeeds.push_back(140);
+		
+		
+		if (CreateDDSTextureFromFile(&(d3d.GetDevice()), L"bin/data/Background/MedCloud5.dds", nullptr, &textures[3], 0, &alpha) != S_OK)
+			assert(false);
+
+		sprites.push_back(Sprite::Sprite(Vector2(0, 0), Vector2(1280, 720), textures[3], d3d, true));
+		sprites[3].scale = bgScale;
+		sprites[3].sprRect.right *= 2;
+		bgTimers.push_back(0);
+		scrollSpeeds.push_back(170);
+
+		
+		if (CreateDDSTextureFromFile(&(d3d.GetDevice()), L"bin/data/Background/BigCloud3.dds", nullptr, &textures[4], 0, &alpha) != S_OK)
+			assert(false);
+
+		sprites.push_back(Sprite::Sprite(Vector2(0, 0), Vector2(1280, 720), textures[4], d3d, true));
+		sprites[4].scale = bgScale;
+		sprites[4].sprRect.right *= 2;
+		bgTimers.push_back(0);
+		scrollSpeeds.push_back(200);
+
+
+		//Make player texture
+		if (CreateDDSTextureFromFile(&(d3d.GetDevice()), L"bin/data/Entities/birdneutralsprite.dds", nullptr, &textures[5], 0, &alpha) != S_OK)
+			assert(false);
+
+		sprites.push_back(Sprite::Sprite(Vector2(500, 500), Vector2(1280, 720), textures[5], d3d, true, true, 5, 10.0f, 5.0f));
+
+		//Make enemy texture
+		if (CreateDDSTextureFromFile(&(d3d.GetDevice()), L"bin/data/Entities/penguinplane_backwards.dds", nullptr, &textures[6], 0, &alpha) != S_OK)
+			assert(false);
+
+		sprites.push_back(Sprite::Sprite(Vector2(100, 100), Vector2(1280, 720), textures[6], d3d, true, true, 3, 10.0f, 3.5f));
 	}
 
 
@@ -221,8 +150,51 @@ public:
 	//called over and over, use it to update game logic
 	void Update(float dTime, MyD3D& d3d)
 	{
-	}
+		//Movement
+		auto kb = m_keyboard->GetState();
+		if (kb.Escape)
+		{
+			PostQuitMessage(0);
+			
+		}
+		if (sprites[5].pos.y >= 0 && sprites[5].pos.y <= 570) {
+			if (kb.W || kb.Up) {
+				sprites[5].pos.y -= sprites[5].moveSpeed + dTime;
+			}
+			if (kb.S || kb.Down) {
+				sprites[5].pos.y += sprites[5].moveSpeed + dTime;
+			}
+		}
+		else if (sprites[5].pos.y <= 0){
+			sprites[5].pos.y = 0;
+		}
+		else if (sprites[5].pos.y >= 550) {
+			sprites[5].pos.y = 570;
+		}
+		
 
+		if (sprites[5].pos.x >= 0 && sprites[5].pos.x <= 1100) {
+			if (kb.A || kb.Left) {
+				sprites[5].pos.x -= sprites[5].moveSpeed + dTime;
+			}
+			if (kb.D || kb.Right) {
+				sprites[5].pos.x += sprites[5].moveSpeed + dTime;
+			}
+		}
+		else if (sprites[5].pos.x <= 0) {
+			sprites[5].pos.x = 0;
+		}
+		else if (sprites[5].pos.x >= 1100) {
+			sprites[5].pos.x = 1100;
+		}
+		
+
+		//auto mouse = m_mouse->GetState();
+
+
+
+		
+	}
 
 	//called over and over, use it to render things
 	void Render(float dTime, MyD3D& d3d)
@@ -238,12 +210,27 @@ public:
 				sprites[i].Render();
 			}
 		}
+
+
+		float bgWidth = sprites[1].texSize.x;
+
+		//Scrolling background
 		
-		if (animSprites.empty() == false) {
-			for (int i = 0; i < animSprites.size(); i++) {
-				animSprites[i].Render();
+		for (int i = 0; i < bgTimers.size(); i++) {
+			bgTimers[i] += dTime;
+
+			float scroll = bgTimers[i] * scrollSpeeds[i];
+
+			if (sprites[i].pos.x <= -(bgWidth * bgScale)) {
+				sprites[i].pos.x = 0;
+				bgTimers[i] = 0;
+			}
+			else {
+				sprites[i].pos.x = -scroll;
 			}
 		}
+
+	
 
 		d3d.EndRender();
 	}
@@ -267,17 +254,38 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	switch (msg)
 	{
 	// Respond to a keyboard event.
-	case WM_CHAR:
-		switch (wParam)
-		{
-		case ASCII_ESC:
-		case 'q':
-		case 'Q':
-			PostQuitMessage(0);
-			return 0;
+	case WM_ACTIVATEAPP:
+		Keyboard::ProcessMessage(msg, wParam, lParam);
+		Mouse::ProcessMessage(msg, wParam, lParam);
+		break;
+	case WM_ACTIVATE:
+	case WM_INPUT:
+	case WM_MOUSEMOVE:
+	case WM_LBUTTONDOWN:
+	case WM_LBUTTONUP:
+	case WM_RBUTTONDOWN:
+	case WM_RBUTTONUP:
+	case WM_MBUTTONDOWN:
+	case WM_MBUTTONUP:
+	case WM_MOUSEWHEEL:
+	case WM_XBUTTONDOWN:
+	case WM_XBUTTONUP:
+	case WM_MOUSEHOVER:
+		Mouse::ProcessMessage(msg, wParam, lParam);
+		break;
 
-			
+	case WM_KEYDOWN:
+	case WM_KEYUP:
+	case WM_SYSKEYUP:
+		Keyboard::ProcessMessage(msg, wParam, lParam);
+		break;
+
+	case WM_SYSKEYDOWN:
+		Keyboard::ProcessMessage(msg, wParam, lParam);
+		if (wParam == VK_RETURN && (lParam & 0x60000000) == 0x20000000)
+		{
 		}
+		break;
 	}
 
 	//default message handling (resize window, full screen, etc)
