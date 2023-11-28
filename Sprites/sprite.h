@@ -10,17 +10,14 @@
 #include "DDSTextureLoader.h"
 #include "CommonStates.h"
 
-//#include "GameObject.h"
 
 using namespace std;
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
 
-class Sprite{
+class Sprite {
 private:
-	bool active;
-
 	ID3D11ShaderResourceView* pT;
 	MyD3D d3d;
 	int spriteAmount;
@@ -50,11 +47,11 @@ public:
 
 
 
-	//Sprite(Vector2 globPos, ID3D11ShaderResourceView* textPointer, MyD3D& d3dToPass, bool alpha = false, bool isAnim = false, int spriteAmount = 1, float speed = 10.0f, float scale = 1.0f);
-	Sprite();
+	Sprite(Vector2 globPos, Vector2 wSize, ID3D11ShaderResourceView* textPointer, MyD3D& d3dToPass, bool alpha = false, bool isAnim = false, int spriteAmount = 1, float speed = 10.0f, float scale = 1.0f);
 
 	void Render();
-	void createSprite(Vector2 globPos, ID3D11ShaderResourceView* textPointer, MyD3D& d3dToPass, bool alpha = false, float scale = 1.0f, bool isAnim = false, int spriteAmount = 1, float speed = 10.0f);
 
+	void setTexRect(RECT rectToPass);
+	
 
 };
