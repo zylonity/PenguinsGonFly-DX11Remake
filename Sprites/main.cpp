@@ -19,6 +19,7 @@
 
 
 #include "sprite.h"
+#include "player.h"
 
 using namespace std;
 using namespace DirectX;
@@ -55,15 +56,17 @@ int randomNumber(int a, int b = 0) {
 
 class Game {
 
-	ID3D11ShaderResourceView* textures[7];
-
 	vector<Sprite> sprites;
+	
+
 	std::unique_ptr<DirectX::Keyboard> m_keyboard;
 	std::unique_ptr<DirectX::Mouse> m_mouse;
 
 	vector<float> bgTimers;
 	vector<float> scrollSpeeds;
 	float bgScale = 6;
+
+	Player player;
 
 public:
 	Game(MyD3D& d3d)
@@ -74,77 +77,50 @@ public:
 		m_mouse = std::make_unique<Mouse>();
 		//m_mouse->SetWindow(window);
 		
-		//Make background texture
-		if (CreateDDSTextureFromFile(&(d3d.GetDevice()), L"bin/data/Background/sky.dds", nullptr, &textures[0], 0, &alpha) != S_OK)
-			assert(false);
-		
-		sprites.push_back(Sprite::Sprite(Vector2(0, 0), Vector2(1280, 720), textures[0], d3d));
-		sprites[0].scale = bgScale;
+		sprites.push_back(Sprite::Sprite());
+		sprites[0].createSprite(d3d, L"bin/data/Background/sky.dds", Vector2(0, 0), false, bgScale);
 		sprites[0].sprRect.right *= 2;
 		bgTimers.push_back(0);
 		scrollSpeeds.push_back(100);
 
-		
-		//Clouds
-		if (CreateDDSTextureFromFile(&(d3d.GetDevice()), L"bin/data/Background/TinyCloud5.dds", nullptr, &textures[1], 0, &alpha) != S_OK)
-			assert(false);
-
-		sprites.push_back(Sprite::Sprite(Vector2(0, 0), Vector2(1280, 720), textures[1], d3d, true));
-		sprites[1].scale = bgScale;
+		sprites.push_back(Sprite::Sprite());
+		sprites[1].createSprite(d3d, L"bin/data/Background/TinyCloud5.dds", Vector2(0, 0), true, bgScale);
 		sprites[1].sprRect.right *= 2;
 		bgTimers.push_back(0);
 		scrollSpeeds.push_back(110);
-		
-		
-		if (CreateDDSTextureFromFile(&(d3d.GetDevice()), L"bin/data/Background/SmallCloud3.dds", nullptr, &textures[2], 0, &alpha) != S_OK)
-			assert(false);
 
-		sprites.push_back(Sprite::Sprite(Vector2(0, 0), Vector2(1280, 720), textures[2], d3d, true));
-		sprites[2].scale = bgScale;
+		sprites.push_back(Sprite::Sprite());
+		sprites[2].createSprite(d3d, L"bin/data/Background/SmallCloud3.dds", Vector2(0, 0), true, bgScale);
 		sprites[2].sprRect.right *= 2;
 		bgTimers.push_back(0);
 		scrollSpeeds.push_back(140);
-		
-		
-		if (CreateDDSTextureFromFile(&(d3d.GetDevice()), L"bin/data/Background/MedCloud5.dds", nullptr, &textures[3], 0, &alpha) != S_OK)
-			assert(false);
 
-		sprites.push_back(Sprite::Sprite(Vector2(0, 0), Vector2(1280, 720), textures[3], d3d, true));
-		sprites[3].scale = bgScale;
+		sprites.push_back(Sprite::Sprite());
+		sprites[3].createSprite(d3d, L"bin/data/Background/MedCloud5.dds", Vector2(0, 0), true, bgScale);
 		sprites[3].sprRect.right *= 2;
 		bgTimers.push_back(0);
 		scrollSpeeds.push_back(170);
 
-		
-		if (CreateDDSTextureFromFile(&(d3d.GetDevice()), L"bin/data/Background/BigCloud3.dds", nullptr, &textures[4], 0, &alpha) != S_OK)
-			assert(false);
-
-		sprites.push_back(Sprite::Sprite(Vector2(0, 0), Vector2(1280, 720), textures[4], d3d, true));
-		sprites[4].scale = bgScale;
+		sprites.push_back(Sprite::Sprite());
+		sprites[4].createSprite(d3d, L"bin/data/Background/BigCloud3.dds", Vector2(0, 0), true, bgScale);
 		sprites[4].sprRect.right *= 2;
 		bgTimers.push_back(0);
 		scrollSpeeds.push_back(200);
 
 
 		//Make player texture
-		if (CreateDDSTextureFromFile(&(d3d.GetDevice()), L"bin/data/Entities/birdneutralsprite.dds", nullptr, &textures[5], 0, &alpha) != S_OK)
-			assert(false);
+		player.createSprite(d3d, L"bin/data/Entities/birdneutralsprite.dds", Vector2(0, 0), true, 5.0f, true, 5, 10.0f);
+		player.moveSpeed = 650.0f;
 
-		sprites.push_back(Sprite::Sprite(Vector2(500, 500), Vector2(1280, 720), textures[5], d3d, true, true, 5, 10.0f, 5.0f));
-
-		//Make enemy texture
-		if (CreateDDSTextureFromFile(&(d3d.GetDevice()), L"bin/data/Entities/penguinplane_backwards.dds", nullptr, &textures[6], 0, &alpha) != S_OK)
-			assert(false);
-
-		sprites.push_back(Sprite::Sprite(Vector2(100, 100), Vector2(1280, 720), textures[6], d3d, true, true, 3, 10.0f, 3.5f));
+		sprites.push_back(Sprite::Sprite());
+		sprites[5].createSprite(d3d, L"bin/data/Entities/penguinplane_backwards.dds", Vector2(0, 0), true, 3.5f, true, 3, 10.0f);
 	}
 
 
 	//any memory or resources we made need releasing at the end
 	void ReleaseGame()
 	{
-		ReleaseCOM(textures[0]);
-		//ReleaseCOM(textures[1]);
+		
 	}
 
 	//called over and over, use it to update game logic
@@ -157,37 +133,8 @@ public:
 			PostQuitMessage(0);
 			
 		}
-		if (sprites[5].pos.y >= 0 && sprites[5].pos.y <= 570) {
-			if (kb.W || kb.Up) {
-				sprites[5].pos.y -= sprites[5].moveSpeed + dTime;
-			}
-			if (kb.S || kb.Down) {
-				sprites[5].pos.y += sprites[5].moveSpeed + dTime;
-			}
-		}
-		else if (sprites[5].pos.y <= 0){
-			sprites[5].pos.y = 0;
-		}
-		else if (sprites[5].pos.y >= 550) {
-			sprites[5].pos.y = 570;
-		}
 		
-
-		if (sprites[5].pos.x >= 0 && sprites[5].pos.x <= 1100) {
-			if (kb.A || kb.Left) {
-				sprites[5].pos.x -= sprites[5].moveSpeed + dTime;
-			}
-			if (kb.D || kb.Right) {
-				sprites[5].pos.x += sprites[5].moveSpeed + dTime;
-			}
-		}
-		else if (sprites[5].pos.x <= 0) {
-			sprites[5].pos.x = 0;
-		}
-		else if (sprites[5].pos.x >= 1100) {
-			sprites[5].pos.x = 1100;
-		}
-		
+		player.HandleMovement(kb, dTime);
 
 		//auto mouse = m_mouse->GetState();
 
@@ -207,10 +154,11 @@ public:
 		//put sprites to render here
 		if (sprites.empty() == false) {
 			for (int i = 0; i < sprites.size(); i++) {
-				sprites[i].Render();
+				sprites[i].RenderSprite();
 			}
 		}
 
+		player.RenderSprite();
 
 		float bgWidth = sprites[1].texSize.x;
 

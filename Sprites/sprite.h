@@ -17,8 +17,9 @@ using namespace DirectX::SimpleMath;
 
 
 class Sprite {
-private:
-	ID3D11ShaderResourceView* pT;
+protected:
+	ID3D11ShaderResourceView* texture;
+	DDS_ALPHA_MODE alpha;
 	MyD3D d3d;
 	int spriteAmount;
 	bool isAlpha;
@@ -38,7 +39,6 @@ public:
 	Vector2 pos;
 	Vector2 texSize;
 	float animSpeed;
-	float moveSpeed;
 	float scale;
 
 	bool isAnimated;
@@ -47,9 +47,11 @@ public:
 
 
 
-	Sprite(Vector2 globPos, Vector2 wSize, ID3D11ShaderResourceView* textPointer, MyD3D& d3dToPass, bool alpha = false, bool isAnim = false, int spriteAmount = 1, float speed = 10.0f, float scale = 1.0f);
+	Sprite();
 
-	void Render();
+	void createSprite(MyD3D& d3dToPass, wstring textureLocation, Vector2 globPos, bool alpha = false, float scale = 1.0f, bool isAnim = false, int spriteAmount = 1, float speed = 10.0f);
+
+	void RenderSprite();
 
 	void setTexRect(RECT rectToPass);
 	

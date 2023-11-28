@@ -6,22 +6,27 @@ using namespace std;
 using namespace DirectX;
 using namespace DirectX::SimpleMath;
 
-Sprite::Sprite(Vector2 globPos, Vector2 wSize, ID3D11ShaderResourceView* textPointer, MyD3D& d3dToPass, bool alpha, bool isAnim, int sprAmount, float spd, float scl) {
+Sprite::Sprite(){
+}
+
+void Sprite::createSprite(MyD3D& d3dToPass, wstring textureLocation, Vector2 globPos, bool isAalpha, float scl, bool isAnim, int sprAmount, float spd) {
 	pos = globPos;
-	winSize = wSize;
-	pT = textPointer;
 	d3d = d3dToPass;
-	isAlpha = alpha;
+	isAlpha = isAalpha;
 	isAnimated = isAnim;
 	spriteAmount = sprAmount;
 	animSpeed = spd;
 	scale = scl;
 
+	const wchar_t* texLoc = textureLocation.c_str();
+
+	if (CreateDDSTextureFromFile(&(d3d.GetDevice()), texLoc, nullptr, &texture, 0, &alpha) != S_OK)
+		assert(false);
+
 	//Defaults not set by parameters
 	sprRect = RECT();
-	moveSpeed = 1.0f;
-	
-	pT->GetResource(&resource);
+
+	texture->GetResource(&resource);
 	resource->QueryInterface<ID3D11Texture2D>(&text2D);
 
 	text2D->GetDesc(&desc);
@@ -36,6 +41,9 @@ Sprite::Sprite(Vector2 globPos, Vector2 wSize, ID3D11ShaderResourceView* textPoi
 	spriteBatch = std::make_unique<SpriteBatch>(&d3d.GetDeviceCtx());
 
 	if (isAnimated) {
+
+
+
 		for (int i = 0; i < spriteAmount; i++) {
 			spriteRects.push_back(RECT());
 			spriteRects[i].left = i * (desc.Width / spriteAmount);
@@ -44,10 +52,11 @@ Sprite::Sprite(Vector2 globPos, Vector2 wSize, ID3D11ShaderResourceView* textPoi
 			spriteRects[i].right = (i + 1) * (desc.Width / spriteAmount);
 		}
 	}
-	
+
 }
 
-void Sprite::Render() {
+
+void Sprite::RenderSprite() {
 	if (isAlpha == true) {
 		//Gets device states, makes it transparent and makes the upscaling point clamp so it doesnt blur
 		CommonStates dxstate(&d3d.GetDevice());
@@ -61,10 +70,10 @@ void Sprite::Render() {
 		float currentTime = GetClock();
 		int currentSprite = (int)(currentTime * animSpeed) % spriteAmount;
 
-		spriteBatch->Draw(pT, pos, &spriteRects[currentSprite], Colors::White, 0.0f, Vector2(0, 0), scale);
+		spriteBatch->Draw(texture, pos, &spriteRects[currentSprite], Colors::White, 0.0f, Vector2(0, 0), scale);
 	}
 	else {
-		spriteBatch->Draw(pT, pos, &sprRect, Colors::White, 0.0f, Vector2(0, 0), scale);
+		spriteBatch->Draw(texture, pos, &sprRect, Colors::White, 0.0f, Vector2(0, 0), scale);
 	}
 
 
