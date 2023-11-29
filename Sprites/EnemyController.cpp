@@ -1,7 +1,8 @@
 #include "EnemyController.h"
 
 Enemy::Enemy() {
-
+	alive = false;
+	respawnTimer = 5.0f;
 	moveSpeed = 1.0f;
 	hitbox = RECT();
 }
@@ -41,23 +42,71 @@ int EnemyController::randomNumber(int a, int b) {
 }
 
 EnemyController::EnemyController() {
-	timer = 5;
+
+}
+
+void EnemyController::SpawnEnemies(MyD3D& d3d) {
+	for (int i = 0; i < 5; i++) {
+		enemies.push_back(Enemy::Enemy());
+	}
+
+	
+	for (int i = 0; i < enemies.size(); i++) {
+		enemies[i].createSprite(d3d, L"bin/data/Entities/penguinplane_backwards.dds", Vector2(-400, 250), true, 3.5f, true, 3, 10.0f);
+
+		enemies[i].respawnTimer = randomNumber(7, 2);
+		enemies[i].pos.y = randomNumber(450, -140);
+		enemies[i].moveSpeed = randomNumber(800, 500);
+
+	}
 }
 
 void EnemyController::EnemySpawn(float dTime) {
 
-	if (timer > 0) {
-		timer -= dTime;
 
-		for (int i = 0; i < enemies.size(); i++) {
-			//enemies[i].pos.x -= enemies[i].moveSpeed * dTime;
+	for (int i = 0; i < enemies.size(); i++) {
+
+		enemies[i].SetHitbox();
+
+		//Check if passed map
+		if (enemies[i].pos.x >= -380) {
+			enemies[i].pos.x -= enemies[i].moveSpeed * dTime;
+		}
+		else if (enemies[i].pos.x <= -380) {
+			//Set random timer and kill
+			if (enemies[i].alive) {
+				enemies[i].respawnTimer = randomNumber(7, 2);
+				enemies[i].alive = false;
+			}
+			else {
+				if (enemies[i].respawnTimer >= 0) {
+					enemies[i].respawnTimer -= dTime;
+				}
+				else {
+					enemies[i].moveSpeed = randomNumber(800, 500);
+					enemies[i].pos.y = randomNumber(450, -140);
+					enemies[i].alive = true;
+					enemies[i].pos.x = 1250;
+
+				}
+			}
+
+			
+			
+			
 		}
 
-	}
-	else {
 
-		timer = 5;
 	}
+
 
 }
 
+void EnemyController::RenderEnemies() {
+	for (int i = 0; i < enemies.size(); i++) {
+
+		enemies[i].RenderSprite();
+
+
+	}
+}

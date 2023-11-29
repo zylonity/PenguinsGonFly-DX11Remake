@@ -89,9 +89,7 @@ public:
 		player.createSprite(d3d, L"bin/data/Entities/birdneutralsprite.dds", Vector2(200, 100), true, 5.0f, true, 5, 10.0f);
 		player.moveSpeed = 650.0f;
 
-		enemiess.enemies.push_back(Enemy::Enemy());
-		enemiess.enemies[0].createSprite(d3d, L"bin/data/Entities/penguinplane_backwards.dds", Vector2(900, 250), true, 3.5f, true, 3, 10.0f);
-		enemiess.enemies[0].moveSpeed = 500.0f;
+		enemiess.SpawnEnemies(d3d);
 	}
 
 
@@ -111,8 +109,6 @@ public:
 			PostQuitMessage(0);
 			
 		}
-
-		enemiess.enemies[0].SetHitbox();
 
 
 		player.HandleMovement(kb, dTime);
@@ -143,7 +139,7 @@ public:
 		}
 
 		player.RenderSprite();
-		enemiess.enemies[0].RenderSprite();
+		enemiess.RenderEnemies();
 
 		float bgWidth = background[1].texSize.x;
 

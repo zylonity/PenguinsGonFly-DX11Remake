@@ -61,21 +61,22 @@ void Player::Update() {
 
 void Player::HandleCollisions(vector<Enemy>& enemies) {
 
-	assert(enemies.size() == 1);
-	//assert(isAlive == true);
+
+	for (int i = 0; i < enemies.size(); i++) {
+		if (hitbox.right > enemies[i].hitbox.left &&
+			hitbox.left < enemies[i].hitbox.right &&
+			hitbox.top < enemies[i].hitbox.bottom &&
+			hitbox.bottom > enemies[i].hitbox.top
+			) {
+
+			isAlive = false;
 
 
 
-	if (hitbox.right > enemies[0].hitbox.left &&
-		hitbox.left < enemies[0].hitbox.right &&
-		hitbox.top < enemies[0].hitbox.bottom &&
-		hitbox.bottom > enemies[0].hitbox.top
-		) {
-
-		isAlive = false;
-
-		
-
+		}
 	}
+
+
+	
 
 }

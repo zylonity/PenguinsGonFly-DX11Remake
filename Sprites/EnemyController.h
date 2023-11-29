@@ -7,6 +7,8 @@ class Enemy : public Sprite {
 
 public:
 	float moveSpeed;
+	float respawnTimer;
+	bool alive;
 	RECT hitbox;
 	Enemy();
 
@@ -22,7 +24,12 @@ class EnemyController {
 public:
 	vector<Enemy> enemies;
 	EnemyController();
+
+	void SpawnEnemies(MyD3D& d3d);
+
 	void EnemySpawn(float dTime);
+	void RenderEnemies();
+
 
 	int randomNumber(int a, int b = 0);
 };
