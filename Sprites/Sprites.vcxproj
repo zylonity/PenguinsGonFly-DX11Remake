@@ -99,7 +99,7 @@
   <ItemGroup>
     <ClCompile Include="D3D.cpp" />
     <ClCompile Include="D3DUtil.cpp" />
-    <ClCompile Include="enemy.cpp" />
+    <ClCompile Include="EnemyController.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="sprite.cpp" />
@@ -108,7 +108,7 @@
   <ItemGroup>
     <ClInclude Include="D3D.h" />
     <ClInclude Include="D3DUtil.h" />
-    <ClInclude Include="enemy.h" />
+    <ClInclude Include="EnemyController.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="WindowUtils.h" />

@@ -4,7 +4,7 @@
 #include <d3d11.h>
 #include <iomanip>
 #include <vector>
-#include <random>
+
 
 
 #include "WindowUtils.h"
@@ -20,6 +20,7 @@
 
 #include "sprite.h"
 #include "player.h"
+#include "EnemyController.h"
 
 using namespace std;
 using namespace DirectX;
@@ -29,35 +30,11 @@ using namespace DirectX::SimpleMath;
 const int ASCII_ESC = 27;
 
 
-int randomNumber(int a, int b = 0) {
-
-	int min, max;
-	if (a > b) {
-		min = b;
-		max = a;
-	}
-	else if (b > a) {
-		min = a;
-		max = b;
-	}
-	else if (b == a) {
-		return b;
-	}
-
-	LARGE_INTEGER seed;
-	QueryPerformanceCounter(&seed);
-
-	std::mt19937 rng(seed.QuadPart);
-	std::uniform_int_distribution<int> gen(min, max); // uniform, unbiased
-
-	return gen(rng);
-
-}
-
 class Game {
 
-	vector<Sprite> sprites;
-	
+	vector<Sprite> background;
+	EnemyController enemiess;
+	//vector<Enemy> enemies;
 
 	std::unique_ptr<DirectX::Keyboard> m_keyboard;
 	std::unique_ptr<DirectX::Mouse> m_mouse;
@@ -77,43 +54,44 @@ public:
 		m_mouse = std::make_unique<Mouse>();
 		//m_mouse->SetWindow(window);
 		
-		sprites.push_back(Sprite::Sprite());
-		sprites[0].createSprite(d3d, L"bin/data/Background/sky.dds", Vector2(0, 0), false, bgScale);
-		sprites[0].sprRect.right *= 2;
+		background.push_back(Sprite::Sprite());
+		background[0].createSprite(d3d, L"bin/data/Background/sky.dds", Vector2(0, 0), false, bgScale);
+		background[0].sprRect.right *= 2;
 		bgTimers.push_back(0);
 		scrollSpeeds.push_back(100);
 
-		sprites.push_back(Sprite::Sprite());
-		sprites[1].createSprite(d3d, L"bin/data/Background/TinyCloud5.dds", Vector2(0, 0), true, bgScale);
-		sprites[1].sprRect.right *= 2;
+		background.push_back(Sprite::Sprite());
+		background[1].createSprite(d3d, L"bin/data/Background/TinyCloud5.dds", Vector2(0, 0), true, bgScale);
+		background[1].sprRect.right *= 2;
 		bgTimers.push_back(0);
 		scrollSpeeds.push_back(110);
 
-		sprites.push_back(Sprite::Sprite());
-		sprites[2].createSprite(d3d, L"bin/data/Background/SmallCloud3.dds", Vector2(0, 0), true, bgScale);
-		sprites[2].sprRect.right *= 2;
+		background.push_back(Sprite::Sprite());
+		background[2].createSprite(d3d, L"bin/data/Background/SmallCloud3.dds", Vector2(0, 0), true, bgScale);
+		background[2].sprRect.right *= 2;
 		bgTimers.push_back(0);
 		scrollSpeeds.push_back(140);
 
-		sprites.push_back(Sprite::Sprite());
-		sprites[3].createSprite(d3d, L"bin/data/Background/MedCloud5.dds", Vector2(0, 0), true, bgScale);
-		sprites[3].sprRect.right *= 2;
+		background.push_back(Sprite::Sprite());
+		background[3].createSprite(d3d, L"bin/data/Background/MedCloud5.dds", Vector2(0, 0), true, bgScale);
+		background[3].sprRect.right *= 2;
 		bgTimers.push_back(0);
 		scrollSpeeds.push_back(170);
 
-		sprites.push_back(Sprite::Sprite());
-		sprites[4].createSprite(d3d, L"bin/data/Background/BigCloud3.dds", Vector2(0, 0), true, bgScale);
-		sprites[4].sprRect.right *= 2;
+		background.push_back(Sprite::Sprite());
+		background[4].createSprite(d3d, L"bin/data/Background/BigCloud3.dds", Vector2(0, 0), true, bgScale);
+		background[4].sprRect.right *= 2;
 		bgTimers.push_back(0);
 		scrollSpeeds.push_back(200);
 
 
 		//Make player texture
-		player.createSprite(d3d, L"bin/data/Entities/birdneutralsprite.dds", Vector2(0, 0), true, 5.0f, true, 5, 10.0f);
+		player.createSprite(d3d, L"bin/data/Entities/birdneutralsprite.dds", Vector2(200, 100), true, 5.0f, true, 5, 10.0f);
 		player.moveSpeed = 650.0f;
 
-		sprites.push_back(Sprite::Sprite());
-		sprites[5].createSprite(d3d, L"bin/data/Entities/penguinplane_backwards.dds", Vector2(0, 0), true, 3.5f, true, 3, 10.0f);
+		enemiess.enemies.push_back(Enemy::Enemy());
+		enemiess.enemies[0].createSprite(d3d, L"bin/data/Entities/penguinplane_backwards.dds", Vector2(900, 250), true, 3.5f, true, 3, 10.0f);
+		enemiess.enemies[0].moveSpeed = 500.0f;
 	}
 
 
@@ -133,11 +111,17 @@ public:
 			PostQuitMessage(0);
 			
 		}
-		
+
+		enemiess.enemies[0].SetHitbox();
+
+
 		player.HandleMovement(kb, dTime);
 
-		//auto mouse = m_mouse->GetState();
+		player.HandleCollisions(enemiess.enemies);// enemies);
 
+		player.Update();
+
+		enemiess.EnemySpawn(dTime);
 
 
 		
@@ -151,16 +135,17 @@ public:
 
 		d3d.BeginRender(Vector4(0, 0, 0, 0));
 
-		//put sprites to render here
-		if (sprites.empty() == false) {
-			for (int i = 0; i < sprites.size(); i++) {
-				sprites[i].RenderSprite();
+		//put background to render here
+		if (background.empty() == false) {
+			for (int i = 0; i < background.size(); i++) {
+				background[i].RenderSprite();
 			}
 		}
 
 		player.RenderSprite();
+		enemiess.enemies[0].RenderSprite();
 
-		float bgWidth = sprites[1].texSize.x;
+		float bgWidth = background[1].texSize.x;
 
 		//Scrolling background
 		
@@ -169,16 +154,16 @@ public:
 
 			float scroll = bgTimers[i] * scrollSpeeds[i];
 
-			if (sprites[i].pos.x <= -(bgWidth * bgScale)) {
-				sprites[i].pos.x = 0;
+			if (background[i].pos.x <= -(bgWidth * bgScale)) {
+				background[i].pos.x = 0;
 				bgTimers[i] = 0;
 			}
 			else {
-				sprites[i].pos.x = -scroll;
+				background[i].pos.x = -scroll;
 			}
 		}
 
-	
+
 
 		d3d.EndRender();
 	}
@@ -245,7 +230,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 {
 
 	int w(1280), h(720);
-	if (!WinUtil::Get().InitMainWindow(w, h, hInstance, "Penguins gon cry", MainWndProc, true))
+	if (!WinUtil::Get().InitMainWindow(w, h, hInstance, "Penguins gon fly", MainWndProc, true))
 		assert(false);
 
 	MyD3D d3d;
