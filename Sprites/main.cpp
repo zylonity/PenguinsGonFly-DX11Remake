@@ -90,11 +90,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 
 	bool canUpdateRender;
 	float dTime = 0;
+	std::unique_ptr<DirectX::Keyboard> m_keyboard = std::make_unique<DirectX::Keyboard>();
+	std::unique_ptr<DirectX::Mouse> m_mouse = std::make_unique<DirectX::Mouse>();
 	while (wu.BeginLoop(canUpdateRender))
 	{
 		if (canUpdateRender)
 		{
-			GameManager::Get().Update(dTime, d3d);
+			GameManager::Get().Update(dTime, d3d, m_keyboard, m_mouse);
 			GameManager::Get().Render(dTime, d3d);
 		}
 		dTime = wu.EndLoop(canUpdateRender);

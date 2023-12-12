@@ -27,7 +27,7 @@ public:
 		Release();
 	}
 	void Release();
-	void Update(float dTime, MyD3D& d3d);
+	void Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m_keyboard, std::unique_ptr<DirectX::Mouse>& m_mouse);
 	void Render(float dTime, MyD3D& d3d);
 	void ProcessKey(char key) {
 		mMMgr.ProcessKey(key);

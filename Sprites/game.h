@@ -20,8 +20,7 @@ class Game : public AMode {
 	vector<Sprite> background;
 	EnemyController enemiess;
 
-	std::unique_ptr<DirectX::Keyboard> m_keyboard;
-	std::unique_ptr<DirectX::Mouse> m_mouse;
+
 
 	vector<float> bgTimers;
 	vector<float> scrollSpeeds;
@@ -43,7 +42,7 @@ public:
 	}
 
 	//called over and over, use it to update game logic
-	void Update(float dTime, MyD3D& d3d) override;
+	void Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m_keyboard, std::unique_ptr<DirectX::Mouse>& m_mouse) override;
 	
 
 	//called over and over, use it to render things

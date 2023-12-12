@@ -5,13 +5,16 @@
 
 #include "D3D.h"
 #include "SpriteBatch.h"
-
+#include "Mouse.h"
+#include "Keyboard.h"
 /*
 ABC representing a game mode like intro, game, gameOver, highScores, etc.
 */
 class AMode
 {
 public:
+
+
 	virtual ~AMode() {}
 	/*
 	Called on the old mode when switching to the new one
@@ -22,7 +25,7 @@ public:
 	//called on the new mode just once when it first activates
 	virtual void Enter() {}
 	//once active this is called repeatedly, contains the logic of the mode
-	virtual void Update(float dTime, MyD3D& d3d) = 0;
+	virtual void Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m_keyboard, std::unique_ptr<DirectX::Mouse>& m_mouse) = 0;
 	//used by a mode to render itself
 	virtual void Render(float dTime, MyD3D& d3d) = 0;
 	//get a mode's name
@@ -43,7 +46,7 @@ public:
 	//change mode
 	void SwitchMode(const std::string& newMode);
 	//update the current mode
-	void Update(float dTime, MyD3D& d3d);
+	void Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m_keyboard, std::unique_ptr<DirectX::Mouse>& m_mouse);
 	//render the current mode
 	void Render(float dTime, MyD3D& d3d);
 	//send a key to the current mode
@@ -53,6 +56,7 @@ public:
 	//free all the mode instances, can be called explicitly or
 	//left to the destructor
 	void Release();
+
 
 private:
 	std::vector<AMode*> mModes;	//container of modes

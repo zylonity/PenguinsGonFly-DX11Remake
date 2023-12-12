@@ -14,19 +14,23 @@
 #include "player.h"
 #include "EnemyController.h"
 
+#include "GameManager.h"
+
 #include "ModeMgr.h"
+#include "Buttons.h"
 
 class MainMenu : public AMode{
 
 	vector<Sprite> background;
 
-	std::unique_ptr<DirectX::Keyboard> m_keyboard;
-	std::unique_ptr<DirectX::Mouse> m_mouse;
+	vector<Sprite> menuButtons;
 
 	vector<float> bgTimers;
 	vector<float> scrollSpeeds;
 	float bgScale = 6;
 
+	Button startBtn;
+	Button quitBtn;
 public:
 	static const std::string MODE_NAME;
 
@@ -36,7 +40,7 @@ public:
 	void ReleaseGame(){}
 
 	//called over and over, use it to update game logic
-	void Update(float dTime, MyD3D& d3d) override;
+	void Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m_keyboard, std::unique_ptr<DirectX::Mouse>& m_mouse) override;
 
 
 	//called over and over, use it to render things

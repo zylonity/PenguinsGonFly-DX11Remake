@@ -3,11 +3,8 @@ const std::string MainMenu::MODE_NAME = "MENU";
 MainMenu::MainMenu(MyD3D& d3d)
 {
 	DDS_ALPHA_MODE alpha;
-	//m_mouse->SetWindow(window);
 
 
-	m_keyboard = std::make_unique<Keyboard>();
-	m_mouse = std::make_unique<Mouse>();
 
 	background.push_back(Sprite::Sprite());
 	background[0].createSprite(d3d, L"bin/data/Background/sky.dds", Vector2(0, 0), false, bgScale);
@@ -39,22 +36,18 @@ MainMenu::MainMenu(MyD3D& d3d)
 	bgTimers.push_back(0);
 	scrollSpeeds.push_back(200);
 
+	startBtn.createSprite(d3d, L"bin/data/Buttons/StartButton.dds", Vector2(640, 360), true, 3);
+	quitBtn.createSprite(d3d, L"bin/data/Buttons/quitbutton.dds", Vector2(640, 450), true, 3);
+
+	startBtn.setHitbox();
+	quitBtn.setHitbox();
 
 }
 
-void MainMenu::Update(float dTime, MyD3D& d3d)
+void MainMenu::Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m_keyboard, std::unique_ptr<DirectX::Mouse>& m_mouse)
 {
-	//Movement
-	auto kb = m_keyboard->GetState();
-	if (kb.Escape)
-	{
-		PostQuitMessage(0);
-
-	}
-
-
-
-
+	startBtn.HandleClick(m_mouse, "GAME");
+	quitBtn.HandleClick(m_mouse, "QUIT");
 }
 
 void MainMenu::Render(float dTime, MyD3D& d3d)
@@ -70,6 +63,9 @@ void MainMenu::Render(float dTime, MyD3D& d3d)
 			background[i].RenderSprite();
 		}
 	}
+
+	startBtn.RenderSprite();
+	quitBtn.RenderSprite();
 
 	float bgWidth = background[1].texSize.x;
 

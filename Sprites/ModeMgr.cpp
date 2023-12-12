@@ -9,7 +9,7 @@ void ModeMgr::SwitchMode(const std::string& newMode) {
 	mDesiredMIdx = idx;
 }
 
-void ModeMgr::Update(float dTime, MyD3D& d3d) {
+void ModeMgr::Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m_keyboard, std::unique_ptr<DirectX::Mouse>& m_mouse) {
 	if (mDesiredMIdx != mCurrentMIdx)
 		if (mCurrentMIdx == -1 || mModes[mCurrentMIdx]->Exit())
 		{
@@ -17,7 +17,7 @@ void ModeMgr::Update(float dTime, MyD3D& d3d) {
 			mModes[mCurrentMIdx]->Enter();
 		}
 	assert(mCurrentMIdx >= 0 && mCurrentMIdx < mModes.size());
-	mModes[mCurrentMIdx]->Update(dTime, d3d);
+	mModes[mCurrentMIdx]->Update(dTime, d3d, m_keyboard, m_mouse);
 }
 
 void ModeMgr::Render(float dTime, MyD3D& d3d) {

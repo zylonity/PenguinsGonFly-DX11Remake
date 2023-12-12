@@ -20,9 +20,9 @@ void GameManager::Release()
 }
 
 //called over and over, use it to update game logic
-void GameManager::Update(float dTime, MyD3D& d3d)
+void GameManager::Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m_keyboard, std::unique_ptr<DirectX::Mouse>& m_mouse)
 {
-	mMMgr.Update(dTime, d3d);
+	mMMgr.Update(dTime, d3d, m_keyboard, m_mouse);
 }
 
 //called over and over, use it to render things

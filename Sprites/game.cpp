@@ -8,6 +8,8 @@ Game::Game(MyD3D& d3d)
 
 
 	//m_mouse->SetWindow(window);
+	//m_keyboard = std::make_unique<Keyboard>();
+	//m_mouse = std::make_unique<Mouse>();
 
 	background.push_back(Sprite::Sprite());
 	background[0].createSprite(d3d, L"bin/data/Background/sky.dds", Vector2(0, 0), false, bgScale);
@@ -49,12 +51,12 @@ Game::Game(MyD3D& d3d)
 
 }
 
-void Game::Update(float dTime, MyD3D& d3d)
+void Game::Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m_keyboard, std::unique_ptr<DirectX::Mouse>& m_mouse)
 {
+	auto kb = m_keyboard->GetState();
 
 
-
-	//player.HandleMovement(kb, dTime);
+	player.HandleMovement(kb, dTime);
 
 	player.HandleCollisions(enemiess.enemies);// enemies);
 
