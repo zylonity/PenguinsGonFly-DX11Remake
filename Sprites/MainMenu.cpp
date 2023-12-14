@@ -1,10 +1,11 @@
 #include "MainMenu.h"
+#include "GameManager.h"
 const std::string MainMenu::MODE_NAME = "MENU";
 MainMenu::MainMenu(MyD3D& d3d)
 {
 	DDS_ALPHA_MODE alpha;
 
-
+	isActive = true;
 
 	background.push_back(Sprite::Sprite());
 	background[0].createSprite(d3d, L"bin/data/Background/sky.dds", Vector2(0, 0), false, bgScale);
@@ -36,18 +37,31 @@ MainMenu::MainMenu(MyD3D& d3d)
 	bgTimers.push_back(0);
 	scrollSpeeds.push_back(200);
 
-	startBtn.createSprite(d3d, L"bin/data/Buttons/StartButton.dds", Vector2(640, 360), true, 3);
-	quitBtn.createSprite(d3d, L"bin/data/Buttons/quitbutton.dds", Vector2(640, 450), true, 3);
+	startBtn.createSprite(d3d, L"bin/data/Buttons/StartButton1.dds", Vector2(640, 450), true, 3);
+	leaderBtn.createSprite(d3d, L"bin/data/Buttons/leaderboard.dds", Vector2(640, 540), true, 3);
+	quitBtn.createSprite(d3d, L"bin/data/Buttons/quitbutton.dds", Vector2(640, 630), true, 3);
+
 
 	startBtn.setHitbox();
 	quitBtn.setHitbox();
+	leaderBtn.setHitbox();
+
+	logo.createSprite(d3d, L"bin/data/dds/msai.dds", Vector2(540, 140), true, 2.5f);
+	logoPlane.createSprite(d3d, L"bin/data/Entities/penguinplane.dds", Vector2(420, 130), true, 2.5, true, 3);
+	logo.pos = Vector2(logo.pos.x - logo.texSize.x / 2, logo.pos.y - logo.texSize.y / 2);
 
 }
 
 void MainMenu::Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m_keyboard, std::unique_ptr<DirectX::Mouse>& m_mouse)
 {
-	startBtn.HandleClick(m_mouse, "GAME");
-	quitBtn.HandleClick(m_mouse, "QUIT");
+
+	if (GameManager::Get().GetModeMgr().GetMode() == "MENU") {
+		startBtn.HandleClick(m_mouse, "GAME");
+		quitBtn.HandleClick(m_mouse, "QUIT");
+		leaderBtn.HandleClick(m_mouse, "LEADER");
+	}
+	
+	
 }
 
 void MainMenu::Render(float dTime, MyD3D& d3d)
@@ -66,6 +80,9 @@ void MainMenu::Render(float dTime, MyD3D& d3d)
 
 	startBtn.RenderSprite();
 	quitBtn.RenderSprite();
+	leaderBtn.RenderSprite();
+	logo.RenderSprite();
+	logoPlane.RenderSprite();
 
 	float bgWidth = background[1].texSize.x;
 
@@ -88,6 +105,15 @@ void MainMenu::Render(float dTime, MyD3D& d3d)
 
 
 	d3d.EndRender();
+}
+
+void MainMenu::ResetMenu() {
+	if (background.empty() == false) {
+		for (int i = 0; i < background.size(); i++) {
+			background[i].pos = Vector2(0,0);
+		}
+	}
+	isActive = true;
 }
 
 std::string MainMenu::GetMName() const {

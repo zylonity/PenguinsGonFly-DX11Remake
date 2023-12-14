@@ -18,6 +18,8 @@ void Sprite::createSprite(MyD3D& d3dToPass, wstring textureLocation, Vector2 glo
 	animSpeed = spd;
 	scale = scl;
 
+	isVisible = true;
+
 	const wchar_t* texLoc = textureLocation.c_str();
 
 	if (CreateDDSTextureFromFile(&(d3d.GetDevice()), texLoc, nullptr, &texture, 0, &alpha) != S_OK)
@@ -42,8 +44,6 @@ void Sprite::createSprite(MyD3D& d3dToPass, wstring textureLocation, Vector2 glo
 
 	if (isAnimated) {
 
-
-
 		for (int i = 0; i < spriteAmount; i++) {
 			spriteRects.push_back(RECT());
 			spriteRects[i].left = i * (desc.Width / spriteAmount);
@@ -57,28 +57,31 @@ void Sprite::createSprite(MyD3D& d3dToPass, wstring textureLocation, Vector2 glo
 
 
 void Sprite::RenderSprite() {
-	if (isAlpha == true) {
-		//Gets device states, makes it transparent and makes the upscaling point clamp so it doesnt blur
-		CommonStates dxstate(&d3d.GetDevice());
-		spriteBatch->Begin(SpriteSortMode_Deferred, dxstate.NonPremultiplied(), dxstate.PointWrap());
+	if (isVisible) {
+		if (isAlpha == true) {
+			//Gets device states, makes it transparent and makes the upscaling point clamp so it doesnt blur
+			CommonStates dxstate(&d3d.GetDevice());
+			spriteBatch->Begin(SpriteSortMode_Deferred, dxstate.NonPremultiplied(), dxstate.PointWrap());
+		}
+		else {
+			spriteBatch->Begin();
+		}
+
+		if (isAnimated) {
+			float currentTime = GetClock();
+			int currentSprite = (int)(currentTime * animSpeed) % spriteAmount;
+
+			spriteBatch->Draw(texture, pos, &spriteRects[currentSprite], Colors::White, 0.0f, Vector2(0, 0), scale);
+		}
+		else {
+			spriteBatch->Draw(texture, pos, &sprRect, Colors::White, 0.0f, Vector2(0, 0), scale);
+		}
+
+
+
+		spriteBatch->End();
 	}
-	else {
-		spriteBatch->Begin();
-	}
-
-	if (isAnimated) {
-		float currentTime = GetClock();
-		int currentSprite = (int)(currentTime * animSpeed) % spriteAmount;
-
-		spriteBatch->Draw(texture, pos, &spriteRects[currentSprite], Colors::White, 0.0f, Vector2(0, 0), scale);
-	}
-	else {
-		spriteBatch->Draw(texture, pos, &sprRect, Colors::White, 0.0f, Vector2(0, 0), scale);
-	}
-
-
-
-	spriteBatch->End();
+	
 }
 
 void Sprite::setTexRect(RECT rectToPass) {

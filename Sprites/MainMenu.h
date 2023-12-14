@@ -31,6 +31,13 @@ class MainMenu : public AMode{
 
 	Button startBtn;
 	Button quitBtn;
+	Button leaderBtn;
+
+	Sprite logo;
+	Sprite logoPlane;
+
+	bool isActive;
+
 public:
 	static const std::string MODE_NAME;
 
@@ -45,6 +52,8 @@ public:
 
 	//called over and over, use it to render things
 	void Render(float dTime, MyD3D& d3d) override;
+
+	void ResetMenu();
 
 	std::string GetMName() const override;
 

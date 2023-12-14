@@ -16,6 +16,7 @@
 #include "player.h"
 #include "EnemyController.h"
 #include "ModeMgr.h"
+#include <fstream>
 
 class GameManager : public Singleton<GameManager>
 {
@@ -33,9 +34,24 @@ public:
 		mMMgr.ProcessKey(key);
 	}
 
+	void SetScore(int score);
+	int GetScore() { return PlayerScore; }
+
+	void SetName(wstring name);
+	wstring GetName() { return PlayerName; }
+
 	MyD3D& GetD3D() { return mD3D; }
 	ModeMgr& GetModeMgr() { return mMMgr; }
+
+	vector<int> userScores;
+	vector<wstring> userNames;
+
+
+
 private:
 	MyD3D& mD3D;
 	ModeMgr mMMgr;
+	int PlayerScore;
+	wstring PlayerName;
+	std::wofstream leaderboard;
 };

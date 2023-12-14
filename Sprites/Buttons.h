@@ -5,17 +5,29 @@
 
 #include "Mouse.h"
 #include "Keyboard.h"
-
+#include <fstream> 
 class Button : public Sprite {
+
+	int ButtonAmnt;
+	int currentShow;
+
+	std::wfstream leaderboard;
+
+	bool sortingNums;
 
 public:
 
+	bool clicked;
+	bool hovering;
+	bool isVisible;
 
 	RECT hitbox;
 	Button();
 
-	void HandleClick(std::unique_ptr<DirectX::Mouse>& m_mouse, string mode);
+	bool HandleClick(std::unique_ptr<DirectX::Mouse>& m_mouse, string mode);
 
 	void setHitbox();
+
+	void RenderSprite() override;
 
 };

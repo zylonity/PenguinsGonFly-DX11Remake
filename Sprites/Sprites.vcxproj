@@ -103,10 +103,13 @@
     <ClCompile Include="EnemyController.cpp" />
     <ClCompile Include="game.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="GameOver.cpp" />
+    <ClCompile Include="leaderboard.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="ModeMgr.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="ScreenText.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="WindowUtils.cpp" />
   </ItemGroup>
@@ -118,8 +121,11 @@
     <ClInclude Include="EnemyController.h" />
     <ClInclude Include="game.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="GameOver.h" />
+    <ClInclude Include="leaderboard.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="ScreenText.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="WindowUtils.h" />

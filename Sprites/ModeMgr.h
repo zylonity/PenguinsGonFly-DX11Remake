@@ -53,6 +53,8 @@ public:
 	void ProcessKey(char key);
 	//add a new mode, these should be dynamically allocated
 	void AddMode(AMode* p);
+
+	std::string GetMode() { return mModes[mCurrentMIdx]->GetMName(); }
 	//free all the mode instances, can be called explicitly or
 	//left to the destructor
 	void Release();

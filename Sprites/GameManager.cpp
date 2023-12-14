@@ -1,12 +1,16 @@
 #include "GameManager.h"
 #include "game.h"
 #include "MainMenu.h"
+#include "GameOver.h"
+#include "leaderboard.h"
 
 GameManager::GameManager(MyD3D& d3d)
 	: mD3D(d3d)
 {
 	mMMgr.AddMode(new MainMenu(d3d));
 	mMMgr.AddMode(new Game(d3d));
+	mMMgr.AddMode(new GameOver(d3d));
+	mMMgr.AddMode(new Leaderboard(d3d));
 
 	mMMgr.SwitchMode(MainMenu::MODE_NAME);
 }
@@ -15,6 +19,13 @@ GameManager::GameManager(MyD3D& d3d)
 //any memory or resources we made need releasing at the end
 void GameManager::Release()
 {
+	leaderboard.open("leaderboard.csv");
+	for (int i = 0; i < userScores.size(); i++) {
+		leaderboard << to_wstring(userScores[i]) << ',' << userNames[i] << '\n';
+	}
+	leaderboard.close();
+	
+	
 
 	mMMgr.Release();
 }
@@ -30,4 +41,12 @@ void GameManager::Render(float dTime, MyD3D& d3d)
 {
 	mMMgr.Render(dTime, d3d);
 
+}
+
+void GameManager::SetScore(int score) {
+	PlayerScore = score;
+}
+
+void GameManager::SetName(wstring name) {
+	PlayerName = name;
 }

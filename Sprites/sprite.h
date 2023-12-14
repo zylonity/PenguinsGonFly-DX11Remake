@@ -6,7 +6,7 @@
 #include "D3DUtil.h"
 #include "D3D.h"
 #include "SimpleMath.h"
-#include "SpriteFont.h"
+#include "SpriteBatch.h"
 #include "DDSTextureLoader.h"
 #include "CommonStates.h"
 
@@ -23,6 +23,7 @@ protected:
 	MyD3D d3d;
 	int spriteAmount;
 	bool isAlpha;
+
 
 	vector<RECT> spriteRects;
 	Vector2 winSize;
@@ -42,7 +43,7 @@ public:
 	float scale;
 
 	bool isAnimated;
-	
+	bool isVisible;
 	RECT sprRect;
 
 
@@ -51,7 +52,7 @@ public:
 
 	void createSprite(MyD3D& d3dToPass, wstring textureLocation, Vector2 globPos, bool alpha = false, float scale = 1.0f, bool isAnim = false, int spriteAmount = 1, float speed = 10.0f);
 
-	void RenderSprite();
+	virtual void RenderSprite();
 
 	void setTexRect(RECT rectToPass);
 	
