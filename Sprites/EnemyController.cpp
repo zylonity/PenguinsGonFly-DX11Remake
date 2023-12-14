@@ -61,7 +61,7 @@ void EnemyController::SpawnEnemies(MyD3D& d3d) {
 	}
 }
 
-void EnemyController::EnemySpawn(float dTime) {
+void EnemyController::EnemySpawn(float dTime, float difficulty) {
 
 
 	for (int i = 0; i < enemies.size(); i++) {
@@ -83,7 +83,7 @@ void EnemyController::EnemySpawn(float dTime) {
 					enemies[i].respawnTimer -= dTime;
 				}
 				else {
-					enemies[i].moveSpeed = randomNumber(800, 500);
+					enemies[i].moveSpeed = randomNumber(800 + difficulty, 500 + difficulty);
 					enemies[i].pos.y = randomNumber(450, -140);
 					enemies[i].alive = true;
 					enemies[i].pos.x = 1250;

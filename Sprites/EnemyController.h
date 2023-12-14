@@ -27,7 +27,7 @@ public:
 
 	void SpawnEnemies(MyD3D& d3d);
 
-	void EnemySpawn(float dTime);
+	void EnemySpawn(float dTime, float difficulty);
 	void RenderEnemies();
 
 

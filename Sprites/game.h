@@ -26,7 +26,11 @@ class Game : public AMode {
 	float bgScale = 6;
 
 	const int scoreMultiplier = 10;
+	int difficultyMultiplier = 10;
 	float score;
+
+	
+	float difficulty;
 
 	Player player;
 	Text scoreindicator;

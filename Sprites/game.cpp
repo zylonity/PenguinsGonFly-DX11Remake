@@ -50,12 +50,15 @@ Game::Game(MyD3D& d3d)
 	scoreCounter.createText(d3d, L"000", Vector2(230, 20), Color::Color(Colors::White), 1);
 
 	score = 0;
+	difficulty = 0;
+	
 }
 
 void Game::Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m_keyboard, std::unique_ptr<DirectX::Mouse>& m_mouse)
 {
 	auto kb = m_keyboard->GetState();
 
+	
 
 	if (player.isAlive != true) {
 		GameManager::Get().SetScore(score);
@@ -63,16 +66,17 @@ void Game::Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m
 		GameManager::Get().GetModeMgr().SwitchMode("OVER");
 	}
 	else {
-
+		difficulty += difficultyMultiplier * dTime;
 		player.HandleMovement(kb, dTime);
 
 		player.HandleCollisions(enemiess.enemies);// enemies);
 
 		player.Update();
 
-		enemiess.EnemySpawn(dTime);
+		enemiess.EnemySpawn(dTime, difficulty);
 
 		score += scoreMultiplier * dTime;
+
 		scoreCounter.changeText(std::to_wstring((int)score));
 	}
 
@@ -108,7 +112,7 @@ void Game::Render(float dTime, MyD3D& d3d)
 	for (int i = 0; i < bgTimers.size(); i++) {
 		bgTimers[i] += dTime;
 
-		float scroll = bgTimers[i] * scrollSpeeds[i];
+		float scroll = bgTimers[i] * (scrollSpeeds[i] + difficulty);
 
 		if (background[i].pos.x <= -(bgWidth * bgScale)) {
 			background[i].pos.x = 0;
@@ -136,6 +140,7 @@ void Game::ReleaseGame(MyD3D& d3d) {
 	player.isAlive = true;
 	player.isVisible = true;
 	score = 0;
+	difficulty = 0;
 }
 
 

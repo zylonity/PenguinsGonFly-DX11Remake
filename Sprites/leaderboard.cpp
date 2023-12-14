@@ -46,8 +46,8 @@ Leaderboard::Leaderboard(MyD3D& d3d)
 
 	for (int i = 1; i <= 10; i++) {
 		positions[i - 1].createText(d3d, std::to_wstring(i), Vector2(430, 0 + (i * 60)));
-		namestxt[i - 1].createText(d3d, std::to_wstring(i), Vector2(600, 0 + (i * 60)));
-		scorestxt[i - 1].createText(d3d, std::to_wstring(i), Vector2(780, 0 + (i * 60)));
+		namestxt[i - 1].createText(d3d, L"ABC", Vector2(600, 0 + (i * 60)));
+		scorestxt[i - 1].createText(d3d, L"000", Vector2(780, 0 + (i * 60)));
 	}
 
 
