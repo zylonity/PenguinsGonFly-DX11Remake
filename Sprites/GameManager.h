@@ -11,7 +11,6 @@
 #include "Mouse.h"
 #include "Keyboard.h"
 
-
 #include "sprite.h"
 #include "player.h"
 #include "EnemyController.h"
@@ -45,6 +44,7 @@ public:
 
 	vector<int> userScores;
 	vector<wstring> userNames;
+
 
 
 

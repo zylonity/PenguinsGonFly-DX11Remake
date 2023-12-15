@@ -13,6 +13,10 @@ GameManager::GameManager(MyD3D& d3d)
 	mMMgr.AddMode(new Leaderboard(d3d));
 
 	mMMgr.SwitchMode(MainMenu::MODE_NAME);
+
+	
+
+	
 }
 
 
@@ -28,6 +32,7 @@ void GameManager::Release()
 	
 
 	mMMgr.Release();
+
 }
 
 //called over and over, use it to update game logic

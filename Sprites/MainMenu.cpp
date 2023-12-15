@@ -5,6 +5,9 @@ MainMenu::MainMenu(MyD3D& d3d)
 {
 	DDS_ALPHA_MODE alpha;
 
+
+	bgScale = 6;
+
 	isActive = true;
 
 	background.push_back(Sprite::Sprite());
@@ -47,13 +50,35 @@ MainMenu::MainMenu(MyD3D& d3d)
 	leaderBtn.setHitbox();
 
 	logo.createSprite(d3d, L"bin/data/dds/msai.dds", Vector2(540, 140), true, 2.5f);
-	logoPlane.createSprite(d3d, L"bin/data/Entities/penguinplane.dds", Vector2(420, 130), true, 2.5, true, 3);
 	logo.pos = Vector2(logo.pos.x - logo.texSize.x / 2, logo.pos.y - logo.texSize.y / 2);
+
+	time = 0;
+	birdScale = 0.08f;
+	m_states = std::make_unique<CommonStates>(&d3d.GetDevice());
+
+	m_fxFactory = std::make_unique<EffectFactory>(&d3d.GetDevice());
+
+	m_model = Model::CreateFromCMO(&d3d.GetDevice(), L"bin/data/3D/3d_bird.cmo", *m_fxFactory);
+
+	m_world = Matrix::Identity;
+
+	m_view = Matrix::CreateLookAt(Vector3(2.f, 2.f, 2.f),
+		Vector3::Zero, Vector3::UnitY);
+	m_proj = Matrix::CreatePerspectiveFieldOfView(XM_PI / 4.f,
+		1280.f / 720.f, 0.1f, 10.f);
+
 
 }
 
 void MainMenu::Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m_keyboard, std::unique_ptr<DirectX::Mouse>& m_mouse)
 {
+
+	time += dTime;
+
+	//m_world = Matrix::
+
+	m_world = Matrix::CreateRotationY(300.f) * Matrix::CreateScale(birdScale, birdScale, birdScale) * Matrix::CreateTranslation(-0.6f, 0.2f, 0);
+
 
 	if (GameManager::Get().GetModeMgr().GetMode() == "MENU") {
 		startBtn.HandleClick(m_mouse, "GAME");
@@ -71,6 +96,7 @@ void MainMenu::Render(float dTime, MyD3D& d3d)
 
 	d3d.BeginRender(Vector4(0, 0, 0, 0));
 
+	//Rendering depends on the order these go in:
 	//put background to render here
 	if (background.empty() == false) {
 		for (int i = 0; i < background.size(); i++) {
@@ -81,8 +107,8 @@ void MainMenu::Render(float dTime, MyD3D& d3d)
 	startBtn.RenderSprite();
 	quitBtn.RenderSprite();
 	leaderBtn.RenderSprite();
+	m_model->Draw(&d3d.GetDeviceCtx(), *m_states, m_world, m_view, m_proj); //3D bird
 	logo.RenderSprite();
-	logoPlane.RenderSprite();
 
 	float bgWidth = background[1].texSize.x;
 
@@ -101,6 +127,7 @@ void MainMenu::Render(float dTime, MyD3D& d3d)
 			background[i].pos.x = -scroll;
 		}
 	}
+
 
 
 

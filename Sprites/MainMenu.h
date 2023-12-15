@@ -8,7 +8,8 @@
 #include "CommonStates.h"
 #include "Mouse.h"
 #include "Keyboard.h"
-
+#include "Effects.h"
+#include "Model.h"
 
 #include "sprite.h"
 #include "player.h"
@@ -27,16 +28,27 @@ class MainMenu : public AMode{
 
 	vector<float> bgTimers;
 	vector<float> scrollSpeeds;
-	float bgScale = 6;
-
+	float bgScale;
+	float time;
+	
 	Button startBtn;
 	Button quitBtn;
 	Button leaderBtn;
 
 	Sprite logo;
-	Sprite logoPlane;
 
 	bool isActive;
+
+	float birdScale;
+
+	DirectX::SimpleMath::Matrix m_world;
+	DirectX::SimpleMath::Matrix m_view;
+	DirectX::SimpleMath::Matrix m_proj;
+
+	std::unique_ptr<DirectX::CommonStates> m_states;
+	std::unique_ptr<DirectX::IEffectFactory> m_fxFactory;
+	std::unique_ptr<DirectX::Model> m_model;
+
 
 public:
 	static const std::string MODE_NAME;
