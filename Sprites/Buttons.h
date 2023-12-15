@@ -9,7 +9,7 @@
 class Button : public Sprite {
 
 	int ButtonAmnt;
-	int currentShow;
+	int currentShow; //Deals with what rect to show depending on where the cursor is
 
 	std::wfstream leaderboard;
 

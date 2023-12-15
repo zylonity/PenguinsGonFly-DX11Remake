@@ -34,6 +34,8 @@ class MainMenu : public AMode{
 	Button startBtn;
 	Button quitBtn;
 	Button leaderBtn;
+	Button muteBtn;
+
 
 	Sprite logo;
 
@@ -48,6 +50,9 @@ class MainMenu : public AMode{
 	std::unique_ptr<DirectX::CommonStates> m_states;
 	std::unique_ptr<DirectX::IEffectFactory> m_fxFactory;
 	std::unique_ptr<DirectX::Model> m_model;
+
+	IAudioMgr* pAudio;
+
 
 
 public:

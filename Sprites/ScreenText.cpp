@@ -8,6 +8,7 @@ Text::Text() {
 
 }
 
+//TODO: put the font into the GameManager as we only need it once, instead of once per text...
 void Text::setFont(wstring fontLoc) {
 	spriteFont = std::make_unique<SpriteFont>(&d3d.GetDevice(), fontLoc.c_str());
 }
@@ -26,6 +27,7 @@ void Text::createText(MyD3D& d3dToPass, wstring textt, Vector2 posToPass, Color 
 
 }
 
+//Draw text on screen
 void Text::write() {
 	if (isVisible) {
 		spriteBatch->Begin();
@@ -39,6 +41,7 @@ void Text::changeText(wstring textt) {
 	text = textt;
 }
 
+//Allows input of text into itself, sets _ as a placeholder for each character
 void Text::InputMode(int charLimit, std::unique_ptr<DirectX::Keyboard>& m_keyboard) {
 	auto kb = m_keyboard->GetState();
 	m_keys.Update(kb);
@@ -53,6 +56,7 @@ void Text::InputMode(int charLimit, std::unique_ptr<DirectX::Keyboard>& m_keyboa
 	}
 
 	if (inputAllowed) {
+		//Not my proudest code.
 		if (currentChar < charLimit) {
 			if (m_keys.IsKeyReleased(DirectX::Keyboard::A)) {
 				text[currentChar] = L'A';
@@ -158,8 +162,9 @@ void Text::InputMode(int charLimit, std::unique_ptr<DirectX::Keyboard>& m_keyboa
 				text[currentChar] = L'Z';
 				currentChar++;
 			}
-		}
+		} 
 
+		//Account for backspace
 		if (currentChar > 0) {
 			if (m_keys.IsKeyReleased(DirectX::Keyboard::Back)) {
 				text[currentChar - 1] = L'_';

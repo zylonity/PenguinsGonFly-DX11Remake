@@ -55,6 +55,8 @@ public:
 	virtual void RenderSprite();
 
 	void setTexRect(RECT rectToPass);
+
+	void setTexture(wstring textureLocation);
 	
 
 };

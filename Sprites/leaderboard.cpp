@@ -50,7 +50,7 @@ Leaderboard::Leaderboard(MyD3D& d3d)
 		scorestxt[i - 1].createText(d3d, L"000", Vector2(780, 0 + (i * 60)));
 	}
 
-
+	//Take every user and score out of the csv file and into an array
 	scores.open("leaderboard.csv");
 
 	wstring num = L"";
@@ -83,7 +83,7 @@ Leaderboard::Leaderboard(MyD3D& d3d)
 	scores.close();
 
 
-
+	//Sort the array
 	if (GameManager::Get().userNames.size() > 0) {
 		for (int j = 0; j < GameManager::Get().userNames.size() - 1; j++) {
 			for (int i = 0; i < GameManager::Get().userScores.size(); i++) {
@@ -109,7 +109,8 @@ Leaderboard::Leaderboard(MyD3D& d3d)
 
 void Leaderboard::Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m_keyboard, std::unique_ptr<DirectX::Mouse>& m_mouse)
 {
-	
+	//Update the text on screen with array
+	//TODO: I don't need to run this every frame, try call it when switching to leaderboard screen somehow
 	for (int i = 0; i < 10; i++) {
 		if (i >= GameManager::Get().userNames.size()) {
 			continue;

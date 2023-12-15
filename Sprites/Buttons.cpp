@@ -40,6 +40,19 @@ bool Button::HandleClick(std::unique_ptr<DirectX::Mouse>& m_mouse, string mode) 
 		if (mode == "QUIT") {
 			PostQuitMessage(0);
 		}
+		else if (mode == "MUTE") {
+			GameManager::Get().music_mute = !GameManager::Get().music_mute;
+			if (GameManager::Get().music_mute == true) {
+				setTexture(L"bin/data/Buttons/muted.dds");
+			}
+			else {
+				setTexture(L"bin/data/Buttons/loud.dds");
+			}
+			clicked = false;
+			return true;
+
+			
+		}
 		else if (mode == "SUBMIT") {
 
 			if (GameManager::Get().userScores.size() > 0) {
@@ -67,6 +80,9 @@ bool Button::HandleClick(std::unique_ptr<DirectX::Mouse>& m_mouse, string mode) 
 			clicked = false;
 			return true;
 		}
+		else if(mode == "") {
+			return true;
+		}
 		else {
 			GameManager::Get().GetModeMgr().SwitchMode(mode);
 			clicked = false;
@@ -76,6 +92,7 @@ bool Button::HandleClick(std::unique_ptr<DirectX::Mouse>& m_mouse, string mode) 
 	return false;
 }
 
+//Sets the hitbox, should be done after creating the sprite
 void Button::setHitbox() {
 
 	for (int i = 0; i < ButtonAmnt; i++) {
@@ -97,6 +114,7 @@ void Button::setHitbox() {
 
 }
 
+//Button must have 3 sprites within the texture, represents hovering and clicked
 void Button::RenderSprite() {
 
 	if (isVisible) {

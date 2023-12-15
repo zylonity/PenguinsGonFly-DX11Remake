@@ -15,6 +15,7 @@
 #include "EnemyController.h"
 #include "ModeMgr.h"
 #include "ScreenText.h"
+#include "GameManager.h"
 
 class Game : public AMode {
 
@@ -23,10 +24,10 @@ class Game : public AMode {
 
 	vector<float> bgTimers;
 	vector<float> scrollSpeeds;
-	float bgScale = 6;
+	float bgScale;
 
-	const int scoreMultiplier = 10;
-	int difficultyMultiplier = 10;
+	int scoreMultiplier;
+	int difficultyMultiplier;
 	float score;
 
 	
@@ -35,6 +36,10 @@ class Game : public AMode {
 	Player player;
 	Text scoreindicator;
 	Text scoreCounter;
+
+	bool musicPaused;
+	
+	IAudioMgr* pAudio;
 
 public:
 
@@ -54,5 +59,7 @@ public:
 	void Render(float dTime, MyD3D& d3d) override;
 
 	std::string GetMName() const override;
+
+
 
 };

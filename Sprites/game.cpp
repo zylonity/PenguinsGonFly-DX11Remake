@@ -8,6 +8,11 @@ Game::Game(MyD3D& d3d)
 
 	DDS_ALPHA_MODE alpha;
 
+	bgScale = 6;
+	scoreMultiplier = 10;
+	difficultyMultiplier = 10;
+
+	//Add background
 	background.push_back(Sprite::Sprite());
 	background[0].createSprite(d3d, L"bin/data/Background/sky.dds", Vector2(0, 0), false, bgScale);
 	background[0].sprRect.right *= 2;
@@ -51,6 +56,8 @@ Game::Game(MyD3D& d3d)
 
 	score = 0;
 	difficulty = 0;
+
+	pAudio = &GameManager::Get().audio;
 	
 }
 
@@ -58,11 +65,18 @@ void Game::Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m
 {
 	auto kb = m_keyboard->GetState();
 
-	
+	if (!pAudio->GetSongMgr()->IsPlaying(GameManager::Get().musicHdl))
+		pAudio->GetSongMgr()->Play("game", true, false, &GameManager::Get().musicHdl, GameManager::Get().music_volume);
 
+	pAudio->GetSongMgr()->Mute(GameManager::Get().music_mute);
+
+
+
+	//Dead or alive code
 	if (player.isAlive != true) {
 		GameManager::Get().SetScore(score);
 		ReleaseGame(d3d);
+		pAudio->GetSongMgr()->Stop();
 		GameManager::Get().GetModeMgr().SwitchMode("OVER");
 	}
 	else {
@@ -101,6 +115,7 @@ void Game::Render(float dTime, MyD3D& d3d)
 	player.RenderSprite();
 	enemiess.RenderEnemies();
 
+	//Draw text on screen
 	scoreindicator.write();
 	scoreCounter.write();
 
@@ -129,6 +144,7 @@ void Game::Render(float dTime, MyD3D& d3d)
 }
 
 void Game::ReleaseGame(MyD3D& d3d) {
+	//Release/reset game
 	enemiess.enemies.clear();
 	player.pos = Vector2(200, 100);
 	if (background.empty() == false) {

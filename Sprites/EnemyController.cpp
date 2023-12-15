@@ -50,7 +50,7 @@ void EnemyController::SpawnEnemies(MyD3D& d3d) {
 		enemies.push_back(Enemy::Enemy());
 	}
 
-	
+	//Assigns random pos and speed at spawn
 	for (int i = 0; i < enemies.size(); i++) {
 		enemies[i].createSprite(d3d, L"bin/data/Entities/penguinplane_backwards.dds", Vector2(-400, 250), true, 3.5f, true, 3, 10.0f);
 
@@ -83,6 +83,7 @@ void EnemyController::EnemySpawn(float dTime, float difficulty) {
 					enemies[i].respawnTimer -= dTime;
 				}
 				else {
+					//Makes enemy faster depending on difficulty
 					enemies[i].moveSpeed = randomNumber(800 + difficulty, 500 + difficulty);
 					enemies[i].pos.y = randomNumber(450, -140);
 					enemies[i].alive = true;

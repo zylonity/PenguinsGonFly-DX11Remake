@@ -4,9 +4,12 @@
 #include "GameOver.h"
 #include "leaderboard.h"
 
+
 GameManager::GameManager(MyD3D& d3d)
 	: mD3D(d3d)
 {
+	audio.Initialise();
+
 	mMMgr.AddMode(new MainMenu(d3d));
 	mMMgr.AddMode(new Game(d3d));
 	mMMgr.AddMode(new GameOver(d3d));
@@ -14,7 +17,8 @@ GameManager::GameManager(MyD3D& d3d)
 
 	mMMgr.SwitchMode(MainMenu::MODE_NAME);
 
-	
+	music_mute = false;
+	music_volume = 50.0f;
 
 	
 }
@@ -23,6 +27,8 @@ GameManager::GameManager(MyD3D& d3d)
 //any memory or resources we made need releasing at the end
 void GameManager::Release()
 {
+
+	//Save results to leaderboard file at the end
 	leaderboard.open("leaderboard.csv");
 	for (int i = 0; i < userScores.size(); i++) {
 		leaderboard << to_wstring(userScores[i]) << ',' << userNames[i] << '\n';

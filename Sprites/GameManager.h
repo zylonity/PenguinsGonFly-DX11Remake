@@ -10,6 +10,7 @@
 #include "CommonStates.h"
 #include "Mouse.h"
 #include "Keyboard.h"
+#include "AudioMgrFMOD.h"
 
 #include "sprite.h"
 #include "player.h"
@@ -42,10 +43,16 @@ public:
 	MyD3D& GetD3D() { return mD3D; }
 	ModeMgr& GetModeMgr() { return mMMgr; }
 
+
+	//Shared resources
 	vector<int> userScores;
 	vector<wstring> userNames;
 
+	AudioMgrFMOD audio;
+	unsigned int musicHdl;
 
+	bool music_mute;
+	float music_volume;
 
 
 private:

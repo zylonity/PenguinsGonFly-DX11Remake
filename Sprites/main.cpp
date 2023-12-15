@@ -75,7 +75,7 @@ LRESULT CALLBACK MainWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 //main entry point for the game
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd)
 {
-
+	File::initialiseSystem();
 	int w(1280), h(720);
 	if (!WinUtil::Get().InitMainWindow(w, h, hInstance, "Penguins gon fly", MainWndProc, true))
 		assert(false);
@@ -98,6 +98,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, in
 		{
 			GameManager::Get().Update(dTime, d3d, m_keyboard, m_mouse);
 			GameManager::Get().Render(dTime, d3d);
+			GameManager::Get().audio.Update();
 		}
 		dTime = wu.EndLoop(canUpdateRender);
 	}

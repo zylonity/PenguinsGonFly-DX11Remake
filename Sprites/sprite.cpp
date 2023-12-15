@@ -42,6 +42,8 @@ void Sprite::createSprite(MyD3D& d3dToPass, wstring textureLocation, Vector2 glo
 
 	spriteBatch = std::make_unique<SpriteBatch>(&d3d.GetDeviceCtx());
 
+
+	//Divide the sprite into rects if animated
 	if (isAnimated) {
 
 		for (int i = 0; i < spriteAmount; i++) {
@@ -87,4 +89,8 @@ void Sprite::RenderSprite() {
 void Sprite::setTexRect(RECT rectToPass) {
 	sprRect = rectToPass;
 }
-	
+
+void Sprite::setTexture(wstring textureLocation) {
+	if (CreateDDSTextureFromFile(&(d3d.GetDevice()), textureLocation.c_str(), nullptr, &texture, 0, &alpha) != S_OK)
+		assert(false);
+}
