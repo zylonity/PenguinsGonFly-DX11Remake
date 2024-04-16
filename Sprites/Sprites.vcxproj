@@ -140,6 +140,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\bin\bin\scripts\LuaScript.lua" />
+    <None Include="..\bin\bin\scripts\TextureLoader.lua" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

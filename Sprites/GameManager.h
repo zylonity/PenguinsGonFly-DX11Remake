@@ -55,6 +55,8 @@ public:
 	float music_volume;
 
 
+
+
 private:
 	MyD3D& mD3D;
 	ModeMgr mMMgr;

@@ -45,7 +45,8 @@ class Game : public AMode {
 	
 	IAudioMgr* pAudio;
 
-	lua_State* L;
+	lua_State* ls_textures;
+	//lua_State* L;
 
 public:
 
