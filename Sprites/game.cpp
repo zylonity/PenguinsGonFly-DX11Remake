@@ -59,6 +59,15 @@ Game::Game(MyD3D& d3d)
 
 	pAudio = &GameManager::Get().audio;
 	
+	L = luaL_newstate();
+	luaL_openlibs(L);
+
+	if (!LuaOK(L, luaL_dofile(L, "bin/scripts/LuaScript.lua")))
+		assert(false);
+
+	string shieldLoc = LuaGetStr(L, "shieldSpriteLoc");
+	shield.createSprite(d3d, shieldLoc, LuaGetVector2(L, "shieldPos"), true, LuaGetFloat(L, "shieldScale"));
+
 }
 
 void Game::Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m_keyboard, std::unique_ptr<DirectX::Mouse>& m_mouse)
@@ -115,6 +124,8 @@ void Game::Render(float dTime, MyD3D& d3d)
 	player.RenderSprite();
 	enemiess.RenderEnemies();
 
+	shield.RenderSprite();
+
 	//Draw text on screen
 	scoreindicator.write();
 	scoreCounter.write();
@@ -157,6 +168,7 @@ void Game::ReleaseGame(MyD3D& d3d) {
 	player.isVisible = true;
 	score = 0;
 	difficulty = 0;
+	lua_close(L);
 }
 
 

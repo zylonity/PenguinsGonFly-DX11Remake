@@ -108,6 +108,7 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="leaderboard.cpp" />
+    <ClCompile Include="LuaSource.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="ModeMgr.cpp" />
@@ -130,13 +131,15 @@
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="leaderboard.h" />
     <ClInclude Include="LuaHelper.h" />
-    <ClInclude Include="LuaScript.lua" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ScreenText.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="WindowUtils.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\bin\bin\scripts\LuaScript.lua" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

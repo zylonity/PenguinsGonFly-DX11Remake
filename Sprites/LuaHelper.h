@@ -3,6 +3,10 @@
 #include <string>
 #include <functional>
 #include <map>
+#include <assert.h>
+#include <iostream>
+#include "SimpleMath.h"
+
 
 extern "C"
 {
@@ -14,3 +18,13 @@ extern "C"
 #ifdef _WIN32
 #pragma comment(lib, "../lua-5.4.4/liblua54.a")
 #endif
+
+bool LuaOK(lua_State* L, int id);
+
+int LuaGetInt(lua_State* L, const std::string& name);
+float LuaGetFloat(lua_State* L, const std::string& name);
+std::string LuaGetStr(lua_State* L, const std::string& name);
+bool LuaGetBool(lua_State* L, const std::string& name);
+
+
+DirectX::SimpleMath::Vector2 LuaGetVector2(lua_State* L, const std::string& name);
