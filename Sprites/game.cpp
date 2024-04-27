@@ -17,31 +17,31 @@ Game::Game(MyD3D& d3d)
 	background[0].createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "background0"));
 	background[0].sprRect.right *= 2;
 	bgTimers.push_back(0);
-	scrollSpeeds.push_back(100);
+	scrollSpeeds.push_back(LuaGetFloat(GameManager::Get().ls_textures, "bg0scrollspeed"));
 
 	background.push_back(Sprite::Sprite());
 	background[1].createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "background1"));
 	background[1].sprRect.right *= 2;
 	bgTimers.push_back(0);
-	scrollSpeeds.push_back(110);
+	scrollSpeeds.push_back(LuaGetFloat(GameManager::Get().ls_textures, "bg1scrollspeed"));
 
 	background.push_back(Sprite::Sprite());
 	background[2].createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "background2"));
 	background[2].sprRect.right *= 2;
 	bgTimers.push_back(0);
-	scrollSpeeds.push_back(140);
+	scrollSpeeds.push_back(LuaGetFloat(GameManager::Get().ls_textures, "bg2scrollspeed"));
 
 	background.push_back(Sprite::Sprite());
 	background[3].createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "background3"));
 	background[3].sprRect.right *= 2;
 	bgTimers.push_back(0);
-	scrollSpeeds.push_back(170);
+	scrollSpeeds.push_back(LuaGetFloat(GameManager::Get().ls_textures, "bg3scrollspeed"));
 
 	background.push_back(Sprite::Sprite());
 	background[4].createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "background4"));
 	background[4].sprRect.right *= 2;
 	bgTimers.push_back(0);
-	scrollSpeeds.push_back(200);
+	scrollSpeeds.push_back(LuaGetFloat(GameManager::Get().ls_textures, "bg4scrollspeed"));
 
 
 	//Make player texture

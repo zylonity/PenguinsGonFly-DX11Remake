@@ -36,6 +36,12 @@ struct SpriteDetails {
 	float animSpeed;
 };
 
+struct BasicSpriteDetails {
+	std::string TexLoc;
+	float scale;
+};
+
 
 DirectX::SimpleMath::Vector2 LuaGetVector2(lua_State* L, const std::string& name);
 SpriteDetails LuaGetSpriteInfo(lua_State* L, const std::string& name);
+BasicSpriteDetails LuaGetBasicSpriteInfo(lua_State* L, const std::string& name);

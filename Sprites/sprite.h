@@ -56,6 +56,7 @@ public:
 	void createSprite(MyD3D& d3dToPass, wstring textureLocation, Vector2 globPos, bool alpha = false, float scale = 1.0f, bool isAnim = false, int spriteAmount = 1, float speed = 10.0f);
 	void createSprite(MyD3D& d3dToPass, string textureLocation, Vector2 globPos, bool alpha = false, float scale = 1.0f, bool isAnim = false, int spriteAmount = 1, float speed = 10.0f);
 	void createSpriteFromLua(MyD3D& d3dToPass, SpriteDetails luaTextureDetails);
+	void createButtonFromLua(MyD3D& d3dToPass, BasicSpriteDetails luaTextureDetails, Vector2 buttonPos);
 
 	virtual void RenderSprite();
 

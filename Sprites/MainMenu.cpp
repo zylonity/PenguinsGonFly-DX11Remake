@@ -14,48 +14,45 @@ MainMenu::MainMenu(MyD3D& d3d)
 	background[0].createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "mm_background0"));
 	background[0].sprRect.right *= 2;
 	bgTimers.push_back(0);
-	scrollSpeeds.push_back(100);
+	scrollSpeeds.push_back(LuaGetFloat(GameManager::Get().ls_textures, "mm_bg0scrollspeed"));
 
 	background.push_back(Sprite::Sprite());
 	background[1].createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "mm_background1"));
 	background[1].sprRect.right *= 2;
 	bgTimers.push_back(0);
-	scrollSpeeds.push_back(110);
+	scrollSpeeds.push_back(LuaGetFloat(GameManager::Get().ls_textures, "mm_bg1scrollspeed"));
 
 	background.push_back(Sprite::Sprite());
 	background[2].createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "mm_background2"));
 	background[2].sprRect.right *= 2;
 	bgTimers.push_back(0);
-	scrollSpeeds.push_back(140);
+	scrollSpeeds.push_back(LuaGetFloat(GameManager::Get().ls_textures, "mm_bg2scrollspeed"));
 
 	background.push_back(Sprite::Sprite());
 	background[3].createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "mm_background3"));
 	background[3].sprRect.right *= 2;
 	bgTimers.push_back(0);
-	scrollSpeeds.push_back(170);
+	scrollSpeeds.push_back(LuaGetFloat(GameManager::Get().ls_textures, "mm_bg3scrollspeed"));
 
 	background.push_back(Sprite::Sprite());
 	background[4].createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "mm_background4"));
 	background[4].sprRect.right *= 2;
 	bgTimers.push_back(0);
-	scrollSpeeds.push_back(200);
+	scrollSpeeds.push_back(LuaGetFloat(GameManager::Get().ls_textures, "mm_bg4scrollspeed"));
 
-	startBtn.createSprite(d3d, L"bin/data/Buttons/StartButton1.dds", Vector2(640, 450), true, 3);
-	leaderBtn.createSprite(d3d, L"bin/data/Buttons/leaderboard.dds", Vector2(640, 540), true, 3);
-	quitBtn.createSprite(d3d, L"bin/data/Buttons/quitbutton.dds", Vector2(640, 630), true, 3);
-
+	startBtn.createButtonFromLua(d3d, LuaGetBasicSpriteInfo(GameManager::Get().ls_textures, "startButton"), Vector2(640, 450));
+	leaderBtn.createButtonFromLua(d3d, LuaGetBasicSpriteInfo(GameManager::Get().ls_textures, "leaderboardButton"), Vector2(640, 540));
+	quitBtn.createButtonFromLua(d3d, LuaGetBasicSpriteInfo(GameManager::Get().ls_textures, "quitButton"), Vector2(640, 630));
+	muteBtn.createButtonFromLua(d3d, LuaGetBasicSpriteInfo(GameManager::Get().ls_textures, "muteButton"), Vector2(1222, 670));
 
 	startBtn.setHitbox();
 	quitBtn.setHitbox();
 	leaderBtn.setHitbox();
-
-	muteBtn.createSprite(d3d, L"bin/data/Buttons/loud.dds", Vector2(1222, 670), true, 3);
-
-
 	muteBtn.setHitbox();
+	
 
 
-	logo.createSprite(d3d, L"bin/data/dds/msai.dds", Vector2(540, 140), true, 2.5f);
+	logo.createButtonFromLua(d3d, LuaGetBasicSpriteInfo(GameManager::Get().ls_textures, "logo"), Vector2(540, 140));
 	logo.pos = Vector2(logo.pos.x - logo.texSize.x / 2, logo.pos.y - logo.texSize.y / 2);
 
 
