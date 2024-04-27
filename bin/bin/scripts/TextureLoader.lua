@@ -1,37 +1,36 @@
-shieldSpriteLoc = "bin/data/Entities/shield.dds"
-shieldScale = 2.0
-shieldPos = {x = 0, y = 0}
+--Define the sprites from lua!
+--TexLoc: String with the location of the texture
+--PosX, PosY: Floats with the starting X and Y position
+--IsAlpha: Boolean if the texture has transparency
+--Scale: Float with the initial scale of the texture
+--IsAnim: Boolean if the texture is animated
+--NumSprites: Integer with the number of sprites in the texture
+--AnimSpeed: Float with the speed of the animation
 
--- Clouds and sky background
+
+-- Background Scale
 backgroundsScale = 6;
-backgroundsDefaultPos = {x = 0, y = 0}
+
+-- Background Sprites
+--Game
+background0 = {TexLoc = "bin/data/Background/sky.dds", PosX = 0, PosY = 0, IsAlpha = false, Scale = backgroundsScale, IsAnim = false, NumSprites = 0, AnimSpeed = 0}
+background1 = {TexLoc = "bin/data/Background/TinyCloud5.dds", PosX = 0, PosY = 0, IsAlpha = true, Scale = backgroundsScale, IsAnim = false, NumSprites = 0, AnimSpeed = 0}
+background2 = {TexLoc = "bin/data/Background/SmallCloud3.dds", PosX = 0, PosY = 0, IsAlpha = true, Scale = backgroundsScale, IsAnim = false, NumSprites = 0, AnimSpeed = 0}
+background3 = {TexLoc = "bin/data/Background/MedCloud5.dds", PosX = 0, PosY = 0, IsAlpha = true, Scale = backgroundsScale, IsAnim = false, NumSprites = 0, AnimSpeed = 0}
+background4 = {TexLoc = "bin/data/Background/BigCloud3.dds", PosX = 0, PosY = 0, IsAlpha = true, Scale = backgroundsScale, IsAnim = false, NumSprites = 0, AnimSpeed = 0}
+--Main Menu
+mm_background0 = background0
+mm_background1 = background1
+mm_background2 = background2
+mm_background3 = background3
+mm_background4 = background4
+--Leaderboard
+lb_background0 = background0
+lb_background1 = background1
+lb_background2 = background2
+lb_background3 = background3
+lb_background4 = background4
 
 
---background0 = {Loc = "bin/data/Background/sky.dds", Scale = backgroundsScale}
-background0Loc = "bin/data/Background/sky.dds"
-background0StartPos = backgroundsDefaultPos
-background0Scale = backgroundsScale
-
-background1Loc = "bin/data/Background/TinyCloud5.dds"
-background1StartPos = backgroundsDefaultPos
-background1Scale = backgroundsScale
-
-background2Loc = "bin/data/Background/SmallCloud3.dds"
-background2StartPos = backgroundsDefaultPos
-background2Scale = backgroundsScale
-
-background3Loc = "bin/data/Background/MedCloud5.dds"
-background3StartPos = backgroundsDefaultPos
-background3Scale = backgroundsScale
-
-background4Loc = "bin/data/Background/BigCloud3.dds"
-background4StartPos = backgroundsDefaultPos
-background4Scale = backgroundsScale
-
--- Player
---playerTex = "bin/data/Entities/birdneutralsprite.dds"
---playerStartPos = {x = 200, y = 100}
---playerScale = 5.0f
---playerAnimated = true
---playerSpriteAmmount = 5
---playerAnimSpeed = 10f
+-- Player Sprite
+player = {TexLoc = "bin/data/Entities/birdneutralsprite.dds", PosX = 200, PosY = 100, IsAlpha = true, Scale = 5, IsAnim = true, NumSprites = 5, AnimSpeed = 10}

@@ -26,15 +26,16 @@ float LuaGetFloat(lua_State* L, const std::string& name);
 std::string LuaGetStr(lua_State* L, const std::string& name);
 bool LuaGetBool(lua_State* L, const std::string& name);
 
-//struct SpriteDetails {
-//	string TexLoc;
-//	int PosX, PosY;
-//	bool isAlpha;
-//	float scale;
-//	bool isAnim;
-//	int spriteAmount;
-//	float animSpeed;
-//};
+struct SpriteDetails {
+	std::string TexLoc;
+	int PosX, PosY;
+	bool isAlpha;
+	float scale;
+	bool isAnim;
+	int spriteAmount;
+	float animSpeed;
+};
 
 
 DirectX::SimpleMath::Vector2 LuaGetVector2(lua_State* L, const std::string& name);
+SpriteDetails LuaGetSpriteInfo(lua_State* L, const std::string& name);
