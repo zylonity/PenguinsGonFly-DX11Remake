@@ -146,5 +146,6 @@
       <Filter>Lua Scripts</Filter>
     </None>
     <None Include="Player.lua" />
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>
