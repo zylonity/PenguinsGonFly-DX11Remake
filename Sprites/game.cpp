@@ -14,7 +14,7 @@ Game::Game(MyD3D& d3d)
 
 	//Add background
 	background.push_back(Sprite::Sprite());
-	background[0].createSprite(d3d, LuaGetStr(GameManager::Get().ls_textures, "background0.Loc"), LuaGetVector2(GameManager::Get().ls_textures, "background0.StartPos"), true, LuaGetFloat(GameManager::Get().ls_textures, "background0.Scale"));
+	background[0].createSprite(d3d, LuaGetStr(GameManager::Get().ls_textures, "background0Loc"), LuaGetVector2(GameManager::Get().ls_textures, "background0StartPos"), true, LuaGetFloat(GameManager::Get().ls_textures, "background0Scale"));
 	background[0].sprRect.right *= 2;
 	bgTimers.push_back(0);
 	scrollSpeeds.push_back(100);

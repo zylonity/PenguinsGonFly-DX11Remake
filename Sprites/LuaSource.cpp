@@ -77,31 +77,31 @@ DirectX::SimpleMath::Vector2 LuaGetVector2(lua_State* L, const std::string& name
 
 }
 
-SpriteDetails LuaGetSpriteInfo(lua_State* L, const std::string& name){
-	SpriteDetails temp;
-
-	lua_getglobal(L, name.c_str());
-	if (!lua_istable(L, -1))
-		assert(false);
-
-	lua_pushstring(L, "TexLoc");
-	lua_gettable(L, -2);
-	temp.TexLoc = lua_tostring(L, -1);
-	lua_pop(L, 1);
-
-	lua_pushstring(L, "PosX");
-	lua_gettable(L, -2);
-	temp.PosX = lua_tonumber(L, -1);
-	lua_pop(L, 1);
-
-	lua_pushstring(L, "PosY");
-	lua_gettable(L, -2);
-	temp.PosX = lua_tonumber(L, -1);
-	lua_pop(L, 1);
-
-	lua_pushstring(L, "isAlpha");
-	lua_gettable(L, -2);
-	temp.PosX = lua_tonumber(L, -1);
-	lua_pop(L, 1);
-
-}
+//SpriteDetails LuaGetSpriteInfo(lua_State* L, const std::string& name){
+//	SpriteDetails temp;
+//
+//	lua_getglobal(L, name.c_str());
+//	if (!lua_istable(L, -1))
+//		assert(false);
+//
+//	lua_pushstring(L, "TexLoc");
+//	lua_gettable(L, -2);
+//	temp.TexLoc = lua_tostring(L, -1);
+//	lua_pop(L, 1);
+//
+//	lua_pushstring(L, "PosX");
+//	lua_gettable(L, -2);
+//	temp.PosX = lua_tonumber(L, -1);
+//	lua_pop(L, 1);
+//
+//	lua_pushstring(L, "PosY");
+//	lua_gettable(L, -2);
+//	temp.PosX = lua_tonumber(L, -1);
+//	lua_pop(L, 1);
+//
+//	lua_pushstring(L, "isAlpha");
+//	lua_gettable(L, -2);
+//	temp.PosX = lua_tonumber(L, -1);
+//	lua_pop(L, 1);
+//
+//}

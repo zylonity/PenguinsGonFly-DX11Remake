@@ -145,5 +145,6 @@
     <None Include="..\bin\bin\scripts\TextureLoader.lua">
       <Filter>Lua Scripts</Filter>
     </None>
+    <None Include="Player.lua" />
   </ItemGroup>
 </Project>
