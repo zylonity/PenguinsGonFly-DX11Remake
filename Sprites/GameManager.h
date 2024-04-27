@@ -1,5 +1,7 @@
 #pragma once
 
+
+#include "LuaHelper.h"
 #include "Singleton.h"
 #include "WindowUtils.h"
 #include "D3DUtil.h"
@@ -43,7 +45,6 @@ public:
 	MyD3D& GetD3D() { return mD3D; }
 	ModeMgr& GetModeMgr() { return mMMgr; }
 
-
 	//Shared resources
 	vector<int> userScores;
 	vector<wstring> userNames;
@@ -53,8 +54,8 @@ public:
 
 	bool music_mute;
 	float music_volume;
-
-
+	lua_State* ls_textures;
+	
 
 
 private:

@@ -138,6 +138,9 @@ void Sprite::RenderSprite() {
 	
 }
 
+
+
+
 void Sprite::setTexRect(RECT rectToPass) {
 	sprRect = rectToPass;
 }

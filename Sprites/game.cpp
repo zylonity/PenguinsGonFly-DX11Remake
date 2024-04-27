@@ -8,42 +8,37 @@ Game::Game(MyD3D& d3d)
 
 	DDS_ALPHA_MODE alpha;
 
-	ls_textures = luaL_newstate();
-	luaL_openlibs(ls_textures);
-
-	if (!LuaOK(ls_textures, luaL_dofile(ls_textures, "bin/scripts/TextureLoader.lua")))
-		assert(false);
-
+	bgScale = LuaGetFloat(GameManager::Get().ls_textures, "backgroundsScale");
 	scoreMultiplier = 10;
 	difficultyMultiplier = 10;
 
 	//Add background
 	background.push_back(Sprite::Sprite());
-	background[0].createSprite(d3d, LuaGetStr(ls_textures, "background0Loc"), LuaGetVector2(ls_textures, "background0StartPos"), false, LuaGetFloat(ls_textures, "background0Scale"));
+	background[0].createSprite(d3d, LuaGetStr(GameManager::Get().ls_textures, "background0.Loc"), LuaGetVector2(GameManager::Get().ls_textures, "background0.StartPos"), true, LuaGetFloat(GameManager::Get().ls_textures, "background0.Scale"));
 	background[0].sprRect.right *= 2;
 	bgTimers.push_back(0);
 	scrollSpeeds.push_back(100);
 
 	background.push_back(Sprite::Sprite());
-	background[1].createSprite(d3d, LuaGetStr(ls_textures, "background1Loc"), LuaGetVector2(ls_textures, "background1StartPos"), true, LuaGetFloat(ls_textures, "background1Scale"));
+	background[1].createSprite(d3d, LuaGetStr(GameManager::Get().ls_textures, "background1Loc"), LuaGetVector2(GameManager::Get().ls_textures, "background1StartPos"), true, LuaGetFloat(GameManager::Get().ls_textures, "background1Scale"));
 	background[1].sprRect.right *= 2;
 	bgTimers.push_back(0);
 	scrollSpeeds.push_back(110);
 
 	background.push_back(Sprite::Sprite());
-	background[2].createSprite(d3d, LuaGetStr(ls_textures, "background2Loc"), LuaGetVector2(ls_textures, "background2StartPos"), true, LuaGetFloat(ls_textures, "background2Scale"));
+	background[2].createSprite(d3d, LuaGetStr(GameManager::Get().ls_textures, "background2Loc"), LuaGetVector2(GameManager::Get().ls_textures, "background2StartPos"), true, LuaGetFloat(GameManager::Get().ls_textures, "background2Scale"));
 	background[2].sprRect.right *= 2;
 	bgTimers.push_back(0);
 	scrollSpeeds.push_back(140);
 
 	background.push_back(Sprite::Sprite());
-	background[3].createSprite(d3d, LuaGetStr(ls_textures, "background3Loc"), LuaGetVector2(ls_textures, "background3StartPos"), true, LuaGetFloat(ls_textures, "background3Scale"));
+	background[3].createSprite(d3d, LuaGetStr(GameManager::Get().ls_textures, "background3Loc"), LuaGetVector2(GameManager::Get().ls_textures, "background3StartPos"), true, LuaGetFloat(GameManager::Get().ls_textures, "background3Scale"));
 	background[3].sprRect.right *= 2;
 	bgTimers.push_back(0);
 	scrollSpeeds.push_back(170);
 
 	background.push_back(Sprite::Sprite());
-	background[4].createSprite(d3d, LuaGetStr(ls_textures, "background4Loc"), LuaGetVector2(ls_textures, "background4StartPos"), true, LuaGetFloat(ls_textures, "background4Scale"));
+	background[4].createSprite(d3d, LuaGetStr(GameManager::Get().ls_textures, "background4Loc"), LuaGetVector2(GameManager::Get().ls_textures, "background4StartPos"), true, LuaGetFloat(GameManager::Get().ls_textures, "background4Scale"));
 	background[4].sprRect.right *= 2;
 	bgTimers.push_back(0);
 	scrollSpeeds.push_back(200);
@@ -65,8 +60,8 @@ Game::Game(MyD3D& d3d)
 	pAudio = &GameManager::Get().audio;
 
 
-	string shieldLoc = LuaGetStr(ls_textures, "shieldSpriteLoc");
-	shield.createSprite(d3d, shieldLoc, LuaGetVector2(ls_textures, "shieldPos"), true, LuaGetFloat(ls_textures, "shieldScale"));
+	string shieldLoc = LuaGetStr(GameManager::Get().ls_textures, "shieldSpriteLoc");
+	shield.createSprite(d3d, shieldLoc, LuaGetVector2(GameManager::Get().ls_textures, "shieldPos"), true, LuaGetFloat(GameManager::Get().ls_textures, "shieldScale"));
 
 }
 
@@ -168,7 +163,7 @@ void Game::ReleaseGame(MyD3D& d3d) {
 	player.isVisible = true;
 	score = 0;
 	difficulty = 0;
-	lua_close(ls_textures);
+
 }
 
 

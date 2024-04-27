@@ -53,6 +53,8 @@ public:
 	void createSprite(MyD3D& d3dToPass, wstring textureLocation, Vector2 globPos, bool alpha = false, float scale = 1.0f, bool isAnim = false, int spriteAmount = 1, float speed = 10.0f);
 	void createSprite(MyD3D& d3dToPass, string textureLocation, Vector2 globPos, bool alpha = false, float scale = 1.0f, bool isAnim = false, int spriteAmount = 1, float speed = 10.0f);
 
+	void createLuaSprite();
+
 	virtual void RenderSprite();
 
 	void setTexRect(RECT rectToPass);
