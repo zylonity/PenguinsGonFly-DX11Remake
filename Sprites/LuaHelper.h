@@ -45,5 +45,7 @@ DirectX::SimpleMath::Vector2 LuaGetVector2(lua_State* L, const std::string& name
 SpriteDetails LuaGetSpriteInfo(lua_State* L, const std::string& name);
 BasicSpriteDetails LuaGetBasicSpriteInfo(lua_State* L, const std::string& name);
 
+
+//No need to pass function name, since its not like you can edit the C# code in runtime
 DirectX::SimpleMath::Vector2 LuaMovePlayer(lua_State* L, bool& up, bool& down, bool& left, bool& right, float& deltaTime);
 void LuaResetPlayer(lua_State* L);

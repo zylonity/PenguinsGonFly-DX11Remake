@@ -8,6 +8,8 @@
 --AnimSpeed: Float with the speed of the animation
 
 
+-- You could theoretically make a texture pack for the game using this script.
+
 -- Background Scale
 backgroundsScale = 6;
 
