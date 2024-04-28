@@ -174,6 +174,7 @@ bool AudioMgrFMOD::Initialise(void)
 		assert(false);
 	GetSongMgr()->SetVolume(1);
 
+	if(!GetSfxMgr()->Load( "sfx" ))
 
 	return true;
 }
