@@ -7,7 +7,6 @@
 #include <iostream>
 #include "SimpleMath.h"
 
-
 extern "C"
 {
 	#include "../lua-5.4.4/include/lua.h"
@@ -46,4 +45,5 @@ DirectX::SimpleMath::Vector2 LuaGetVector2(lua_State* L, const std::string& name
 SpriteDetails LuaGetSpriteInfo(lua_State* L, const std::string& name);
 BasicSpriteDetails LuaGetBasicSpriteInfo(lua_State* L, const std::string& name);
 
-DirectX::SimpleMath::Vector2 LuaMovePlayer(lua_State* L, const std::string& fname, float deltaTime);
+DirectX::SimpleMath::Vector2 LuaMovePlayer(lua_State* L, bool& up, bool& down, bool& left, bool& right, float& deltaTime);
+void LuaResetPlayer(lua_State* L);

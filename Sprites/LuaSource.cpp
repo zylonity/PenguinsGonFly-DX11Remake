@@ -147,20 +147,36 @@ BasicSpriteDetails LuaGetBasicSpriteInfo(lua_State* L, const std::string& name) 
 
 }
 
-DirectX::SimpleMath::Vector2 LuaMovePlayer(lua_State* L, float deltaTime) {
+DirectX::SimpleMath::Vector2 LuaMovePlayer(lua_State* L, bool& up, bool& down, bool& left, bool& right, float& deltaTime) {
 
-	string fname = "movePlayer";
+	std::string fname = "movePlayer";
 
 	lua_getglobal(L, fname.c_str());
 	if (!lua_isfunction(L, -1))
 		assert(false);
 
-	if(!LuaOK(L, lua_pcall(L, 1, 2, 0)))
+	lua_pushboolean(L, up);
+	lua_pushboolean(L, down);
+	lua_pushboolean(L, left);
+	lua_pushboolean(L, right);
+	lua_pushnumber(L, deltaTime);
+	if(!LuaOK(L, lua_pcall(L, 5, 2, 0)))
 		assert(false);
-
-	float posX = lua_tonumber(L, -2);
-	float posY = lua_tonumber(L, -1);
-	lua_pop(L, 1);
+	
+	float posX = (float)lua_tonumber(L, -2);
+	float posY = (float)lua_tonumber(L, -1);
+	lua_pop(L, 2);
 	
 	return DirectX::SimpleMath::Vector2(posX, posY);
+}
+
+void LuaResetPlayer(lua_State* L) {
+	std::string fname = "ResetPlayer";
+
+	lua_getglobal(L, fname.c_str());
+	if (!lua_isfunction(L, -1))
+		assert(false);
+
+	if (!LuaOK(L, lua_pcall(L, 0, 0, 0)))
+		assert(false);
 }

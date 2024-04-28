@@ -14,13 +14,17 @@ class Player : public Sprite{
 public:
 	bool isAlive;
 
-	float moveSpeed;
 	RECT hitbox;
 	Player();
+
+	float tempPosY;
+
+	lua_State* ls_player;
 
 	void HandleMovement(DirectX::Keyboard::State& kb, float dTime);
 	void HandleCollisions(vector<Enemy>& enemies);
 	void Update();
+	void Release();
 
 };
 

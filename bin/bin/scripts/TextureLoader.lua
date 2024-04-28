@@ -85,3 +85,7 @@ submitButton = {TexLoc = "bin/data/Buttons/submit.dds", Scale = 3}
 
 -- Logo texture
 logo = {TexLoc = "bin/data/dds/msai.dds", Scale = 2.5}
+
+return {
+    player = player
+}

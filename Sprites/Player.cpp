@@ -5,48 +5,31 @@ Player::Player() {
 
 
 
-	moveSpeed = 1.0f;
 	hitbox = RECT();
 
 	isAlive = true;
 
+	ls_player = luaL_newstate();
+	luaL_openlibs(ls_player);
+
+	if (!LuaOK(ls_player, luaL_dofile(ls_player, "bin/scripts/Player.lua")))
+		assert(false);
+
+	tempPosY = LuaGetVector2(ls_player, "playerPos").y;
 }
 
 
 
 void Player::HandleMovement(DirectX::Keyboard::State& kb, float dTime) {
+	//Had to make it booleans otherwise it could only move in one direction at a time
+	bool up, down, left, right = false;
 
-	if (pos.y >= 0 && pos.y <= 570) {
-		if (kb.W || kb.Up) {
-			pos.y -= moveSpeed * dTime;
-		}
-		if (kb.S || kb.Down) {
-			pos.y += moveSpeed * dTime;
-		}
-	}
-	else if (pos.y <= 0) {
-		pos.y = 0;
-	}
-	else if (pos.y >= 550) {
-		pos.y = 570;
-	}
+	up = kb.W || kb.Up;
+	down = kb.S || kb.Down;
+	left = kb.A || kb.Left;
+	right = kb.D || kb.Right;
 
-
-	if (pos.x >= 0 && pos.x <= 1100) {
-		if (kb.A || kb.Left) {
-			pos.x -= moveSpeed * dTime;
-		}
-		if (kb.D || kb.Right) {
-			pos.x += moveSpeed * dTime;
-		}
-	}
-	else if (pos.x <= 0) {
-		pos.x = 0;
-	}
-	else if (pos.x >= 1100) {
-		pos.x = 1100;
-	}
-	
+	pos = LuaMovePlayer(ls_player, up, down, left, right, dTime);
 
 }
 
@@ -79,4 +62,7 @@ void Player::HandleCollisions(vector<Enemy>& enemies) {
 
 	
 
+}
+void Player::Release() {
+	lua_close(ls_player);
 }

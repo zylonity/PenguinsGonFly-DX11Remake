@@ -46,7 +46,6 @@ Game::Game(MyD3D& d3d)
 
 	//Make player texture
 	player.createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "player"));
-	player.moveSpeed = 650.0f;
 
 	enemiess.SpawnEnemies(d3d);
 
@@ -148,7 +147,6 @@ void Game::Render(float dTime, MyD3D& d3d)
 void Game::ReleaseGame(MyD3D& d3d) {
 	//Release/reset game
 	enemiess.enemies.clear();
-	player.pos = Vector2(200, 100);
 	if (background.empty() == false) {
 		for (int i = 0; i < background.size(); i++) {
 			background[i].pos = Vector2(0, 0);
@@ -160,6 +158,7 @@ void Game::ReleaseGame(MyD3D& d3d) {
 	score = 0;
 	difficulty = 0;
 
+	LuaResetPlayer(player.ls_player);
 }
 
 
