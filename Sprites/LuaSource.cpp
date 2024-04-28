@@ -146,3 +146,21 @@ BasicSpriteDetails LuaGetBasicSpriteInfo(lua_State* L, const std::string& name) 
 	return temp;
 
 }
+
+DirectX::SimpleMath::Vector2 LuaMovePlayer(lua_State* L, float deltaTime) {
+
+	string fname = "movePlayer";
+
+	lua_getglobal(L, fname.c_str());
+	if (!lua_isfunction(L, -1))
+		assert(false);
+
+	if(!LuaOK(L, lua_pcall(L, 1, 2, 0)))
+		assert(false);
+
+	float posX = lua_tonumber(L, -2);
+	float posY = lua_tonumber(L, -1);
+	lua_pop(L, 1);
+	
+	return DirectX::SimpleMath::Vector2(posX, posY);
+}
