@@ -174,9 +174,6 @@ bool AudioMgrFMOD::Initialise(void)
 		assert(false);
 	GetSongMgr()->SetVolume(1);
 
-	if(!GetSfxMgr()->Load( "sfx" ))
-		assert(false);// , "No sfx folder");
-	GetSfxMgr()->SetVolume(1);
 
 	return true;
 }
