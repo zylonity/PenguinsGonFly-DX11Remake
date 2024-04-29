@@ -49,9 +49,17 @@ Game::Game(MyD3D& d3d)
 
 	enemiess.SpawnEnemies(d3d);
 
-	scoreindicator.createText(d3d, L"Score:", Vector2(50, 20), Color::Color(Colors::White), 1);
+	ls_score = luaL_newstate();
+	luaL_openlibs(ls_score);
 
-	scoreCounter.createText(d3d, L"000", Vector2(230, 20), Color::Color(Colors::White), 1);
+	if (!LuaOK(ls_score, luaL_dofile(ls_score, "bin/scripts/Score.lua")))
+		assert(false);
+
+	scoreindicator.createText(d3d, L"Score:", Vector2(50, 20), Color::Color(Colors::White), 1);
+	//scoreindicator.createTextFromLua(d3d, LuaGetTextDetails(ls_score, "scoreText"));
+
+	//scoreCounter.createText(d3d, L"000", Vector2(230, 20), Color::Color(Colors::White), 1);
+	scoreCounter.createTextFromLua(d3d, LuaGetTextDetails(ls_score, "scoreText"));
 
 	score = 0;
 	difficulty = 0;
@@ -90,9 +98,9 @@ void Game::Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m
 
 		enemiess.EnemySpawn(dTime, difficulty);
 
-		score += scoreMultiplier * dTime;
+		LuaCallScoreUpdate(ls_score, dTime);
 
-		scoreCounter.changeText(std::to_wstring((int)score));
+		scoreCounter.changeText(std::to_wstring((int)LuaGetFloat(ls_score, "score")));
 	}
 
 
@@ -158,7 +166,7 @@ void Game::ReleaseGame(MyD3D& d3d) {
 	score = 0;
 	difficulty = 0;
 
-	LuaResetPlayer(player.ls_player);
+	LuaCallBasicFunction(player.ls_player, "ResetPlayer");
 }
 
 

@@ -149,5 +149,8 @@
     <None Include="..\bin\bin\scripts\Player.lua">
       <Filter>Lua Scripts</Filter>
     </None>
+    <None Include="..\bin\bin\scripts\Score.lua">
+      <Filter>Lua Scripts</Filter>
+    </None>
   </ItemGroup>
 </Project>

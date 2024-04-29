@@ -170,13 +170,81 @@ DirectX::SimpleMath::Vector2 LuaMovePlayer(lua_State* L, bool& up, bool& down, b
 	return DirectX::SimpleMath::Vector2(posX, posY);
 }
 
-void LuaResetPlayer(lua_State* L) {
-	std::string fname = "ResetPlayer";
+TextDetails LuaGetTextDetails(lua_State* L, const std::string& name) {
+	TextDetails temp;
+	float R, G, B, A;
+
+	lua_getglobal(L, name.c_str());
+	if (!lua_istable(L, -1))
+		assert(false);
+
+	lua_pushstring(L, "text");
+	lua_gettable(L, -2);
+	temp.text = lua_tostring(L, -1);
+	lua_pop(L, 1);
+
+	lua_pushstring(L, "PosX");
+	lua_gettable(L, -2);
+	temp.PosX = lua_tonumber(L, -1);
+	lua_pop(L, 1);
+
+	lua_pushstring(L, "PosY");
+	lua_gettable(L, -2);
+	temp.PosY = lua_tonumber(L, -1);
+	lua_pop(L, 1);
+
+	lua_pushstring(L, "R");
+	lua_gettable(L, -2);
+	R = lua_tonumber(L, -1);
+	lua_pop(L, 1);
+
+	lua_pushstring(L, "G");
+	lua_gettable(L, -2);
+	G = lua_tonumber(L, -1);
+	lua_pop(L, 1);
+
+	lua_pushstring(L, "B");
+	lua_gettable(L, -2);
+	B = lua_tonumber(L, -1);
+	lua_pop(L, 1);
+
+	lua_pushstring(L, "A");
+	lua_gettable(L, -2);
+	A = lua_tonumber(L, -1);
+	lua_pop(L, 1);
+
+	DirectX::XMVECTORF32 tempColour = { { { R, G, B, A } } };
+	temp.colour = DirectX::SimpleMath::Color::Color(tempColour);
+
+	lua_pushstring(L, "scale");
+	lua_gettable(L, -2);
+	temp.scale = lua_tonumber(L, -1);
+	lua_pop(L, 1);
+
+	return temp;
+
+}
+
+
+void LuaCallBasicFunction(lua_State* L, const std::string& fname) {
+
 
 	lua_getglobal(L, fname.c_str());
 	if (!lua_isfunction(L, -1))
 		assert(false);
 
 	if (!LuaOK(L, lua_pcall(L, 0, 0, 0)))
+		assert(false);
+}
+
+void LuaCallScoreUpdate(lua_State* L, float& deltaTime) {
+	std::string fname = "updateScore";
+
+	lua_getglobal(L, fname.c_str());
+	if (!lua_isfunction(L, -1))
+		assert(false);
+
+	lua_pushnumber(L, deltaTime);
+	if (!LuaOK(L, lua_pcall(L, 1, 0, 0)))
 		assert(false);
 }
