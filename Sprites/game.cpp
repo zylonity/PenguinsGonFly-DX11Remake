@@ -56,9 +56,7 @@ Game::Game(MyD3D& d3d)
 		assert(false);
 
 	scoreindicator.createText(d3d, L"Score:", Vector2(50, 20), Color::Color(Colors::White), 1);
-	//scoreindicator.createTextFromLua(d3d, LuaGetTextDetails(ls_score, "scoreText"));
 
-	//scoreCounter.createText(d3d, L"000", Vector2(230, 20), Color::Color(Colors::White), 1);
 	scoreCounter.createTextFromLua(d3d, LuaGetTextDetails(ls_score, "scoreText"));
 
 	score = 0;
