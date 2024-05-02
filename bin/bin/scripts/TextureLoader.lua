@@ -93,5 +93,5 @@ shieldIcon = {TexLoc = "bin/data/Entities/shieldIcon.dds", Scale = 3}
 outsideShield = {TexLoc = "bin/data/Entities/shieldOutside.dds", Scale = 5}
 
 return {
-    player = player
+    player = player -- Give Player.lua access to the original table.
 }

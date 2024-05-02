@@ -51,7 +51,3 @@ function ResetPlayer()
 	playerPos.x = TextureLoader.player.PosX
 	playerPos.y = TextureLoader.player.PosY
 end
-
-function UpdatePlayer(deltaTime)
-	CDispatcher("Update", deltaTime)
-end

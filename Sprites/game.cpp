@@ -47,6 +47,8 @@ Game::Game(MyD3D& d3d)
 	//Make player texture
 	player.createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "player"));
 
+
+	//Deal with player shield stuff
 	BasicSpriteDetails shieldDetails = LuaGetBasicSpriteInfo(GameManager::Get().ls_textures, "outsideShield");
 	player.outsideShield.createSprite(d3d, shieldDetails.TexLoc, player.pos, true, shieldDetails.scale);
 	player.outsideShield.isVisible = false;
