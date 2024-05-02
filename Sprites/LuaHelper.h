@@ -58,5 +58,28 @@ DirectX::SimpleMath::Vector2 LuaMovePlayer(lua_State* L, bool& up, bool& down, b
 
 void LuaCallScoreUpdate(lua_State* L, float& deltaTime);
 
+
+void LuaCallCFunc(lua_State* L, const std::string& name, float& deltaTime);
+
 void LuaCallBasicFunction(lua_State* L, const std::string& fname);
 
+class Dispatcher {
+public:
+	struct Command {
+		typedef std::function<void(float)> voidFloatFunc;
+		voidFloatFunc voidFloatFunction;
+	};
+
+	void Init(lua_State* L) {
+		lua_register(L, "CDispatcher", LuaCall);
+	}
+
+	void Register(const std::string& name, Command cmd) {
+		assert(library.find(name) == library.end());
+			library[name] = cmd;
+	}
+
+	static int LuaCall(lua_State* L);
+private:
+	static std::map<std::string, Command> library;
+};

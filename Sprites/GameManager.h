@@ -56,7 +56,7 @@ public:
 	float music_volume;
 	lua_State* ls_textures;
 	
-
+	Dispatcher disp;
 
 private:
 	MyD3D& mD3D;

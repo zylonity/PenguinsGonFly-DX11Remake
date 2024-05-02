@@ -105,6 +105,7 @@ void Game::Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m
 		player.HandleEnemyCollision(enemiess.enemies);
 		player.HandleShieldCollision(shields);
 
+		//LuaCallCFunc(player.ls_player, "UpdatePlayer", dTime);
 		player.Update(dTime);
 
 		enemiess.EnemySpawn(dTime, difficulty);

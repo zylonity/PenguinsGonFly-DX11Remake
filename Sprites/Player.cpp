@@ -18,6 +18,9 @@ Player::Player() {
 	if (!LuaOK(ls_player, luaL_dofile(ls_player, "bin/scripts/Player.lua")))
 		assert(false);
 
+	GameManager::Get().disp.Init(ls_player);
+	Init(GameManager::Get().disp);
+
 	tempPosY = LuaGetVector2(ls_player, "playerPos").y;
 }
 
@@ -69,6 +72,7 @@ void Player::Update(float& dTime) {
 	}
 }
 
+
 void Player::HandleEnemyCollision(vector<Enemy>& enemies) {
 
 	if (!isShielded) {
@@ -104,4 +108,9 @@ void Player::HandleShieldCollision(ShieldController& shield_c) {
 
 void Player::Release() {
 	lua_close(ls_player);
+}
+
+void Player::Init(Dispatcher& disp) {
+	Dispatcher::Command::voidFloatFunc f{ [this](float dTime) {return Update(dTime); } };
+	disp.Register("Update", Dispatcher::Command{f});
 }

@@ -14,6 +14,7 @@ GameManager::GameManager(MyD3D& d3d)
 	if (!LuaOK(GameManager::Get().ls_textures, luaL_dofile(GameManager::Get().ls_textures, "bin/scripts/TextureLoader.lua")))
 		assert(false);
 
+
 	audio.Initialise();
 
 	mMMgr.AddMode(new MainMenu(d3d));

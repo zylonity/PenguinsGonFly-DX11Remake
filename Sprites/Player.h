@@ -36,6 +36,7 @@ public:
 	void HandleShieldCollision(ShieldController& shield_c);
 	void Update(float& dTime);
 	void Release();
+	void Init(Dispatcher& disp);
 
 };
 
