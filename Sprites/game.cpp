@@ -47,7 +47,19 @@ Game::Game(MyD3D& d3d)
 	//Make player texture
 	player.createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "player"));
 
+	BasicSpriteDetails shieldDetails = LuaGetBasicSpriteInfo(GameManager::Get().ls_textures, "outsideShield");
+	player.outsideShield.createSprite(d3d, shieldDetails.TexLoc, player.pos, true, shieldDetails.scale);
+	player.outsideShield.isVisible = false;
+
+	player.shieldTimeIndicator.createText(d3d, L"Shield remaining:", Vector2(50, 600), Color::Color(Colors::White), 1);
+	player.shieldTimeRemaining.createText(d3d, L"0", Vector2(500, 600), Color::Color(Colors::White), 1);
+
+	player.shieldTimeIndicator.isVisible = false;
+	player.shieldTimeRemaining.isVisible = false;
+
 	enemiess.SpawnEnemies(d3d, GameManager::Get().ls_textures);
+
+	shields.SpawnShields(d3d, GameManager::Get().ls_textures);
 
 	ls_score = luaL_newstate();
 	luaL_openlibs(ls_score);
@@ -90,11 +102,14 @@ void Game::Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m
 		difficulty += difficultyMultiplier * dTime;
 		player.HandleMovement(kb, dTime);
 
-		player.HandleCollisions(enemiess.enemies);// enemies);
+		player.HandleEnemyCollision(enemiess.enemies);
+		player.HandleShieldCollision(shields);
 
-		player.Update();
+		player.Update(dTime);
 
 		enemiess.EnemySpawn(dTime, difficulty);
+
+		shields.ShieldUpdate(dTime, difficulty);
 
 		LuaCallScoreUpdate(ls_score, dTime);
 
@@ -120,8 +135,12 @@ void Game::Render(float dTime, MyD3D& d3d)
 	}
 
 	player.RenderSprite();
-	enemiess.RenderEnemies();
+	player.outsideShield.RenderSprite();
+	player.shieldTimeIndicator.write();
+	player.shieldTimeRemaining.write();
 
+	enemiess.RenderEnemies();
+	shields.RenderShield();
 	//Draw text on screen
 	scoreindicator.write();
 	scoreCounter.write();
@@ -159,6 +178,8 @@ void Game::ReleaseGame(MyD3D& d3d) {
 		}
 	}
 	enemiess.SpawnEnemies(d3d, GameManager::Get().ls_textures);
+	shields.SpawnShields(d3d, GameManager::Get().ls_textures);
+
 	player.isAlive = true;
 	player.isVisible = true;
 	score = 0;

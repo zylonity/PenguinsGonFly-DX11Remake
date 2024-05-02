@@ -29,10 +29,12 @@ public:
 
 	ShieldController();
 
-	void SpawnShields(MyD3D& d3d);
+	void SpawnShields(MyD3D& d3d, lua_State* ls_textures);
 
-	void ShieldSpawn(float dTime, float difficulty);
+	void ShieldUpdate(float dTime, float difficulty);
 	void RenderShield();
+
+	void ShieldHit();
 
 
 	int randomNumber(int a, int b = 0);

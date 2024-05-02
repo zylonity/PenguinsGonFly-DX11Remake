@@ -16,6 +16,7 @@
 #include "sprite.h"
 #include "player.h"
 #include "EnemyController.h"
+#include "Shield.h"
 #include "ModeMgr.h"
 #include "ScreenText.h"
 #include "GameManager.h"
@@ -24,6 +25,8 @@ class Game : public AMode {
 
 	vector<Sprite> background;
 	EnemyController enemiess;
+	ShieldController shields;
+
 
 	vector<float> bgTimers;
 	vector<float> scrollSpeeds;

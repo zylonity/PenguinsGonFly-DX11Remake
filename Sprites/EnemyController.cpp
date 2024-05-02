@@ -52,6 +52,7 @@ void EnemyController::SpawnEnemies(MyD3D& d3d, lua_State* ls_textures) {
 
 	//Assigns random pos and speed at spawn
 	for (int i = 0; i < enemies.size(); i++) {
+
 		enemies[i].createSpriteFromLua(d3d, LuaGetSpriteInfo(ls_textures, "enemy"));
 		enemies[i].respawnTimer = randomNumber(7, 2);
 		enemies[i].pos.y = randomNumber(450, -140);
