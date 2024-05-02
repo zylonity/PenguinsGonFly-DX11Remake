@@ -1,4 +1,5 @@
 #pragma once
+#include "LuaHelper.h"
 #include "WindowUtils.h"
 #include "D3DUtil.h"
 #include "D3D.h"
@@ -8,11 +9,14 @@
 #include "CommonStates.h"
 #include "Mouse.h"
 #include "Keyboard.h"
+#include <string> 
 
+#include <filesystem>
 
 #include "sprite.h"
 #include "player.h"
 #include "EnemyController.h"
+#include "Shield.h"
 #include "ModeMgr.h"
 #include "ScreenText.h"
 #include "GameManager.h"
@@ -21,6 +25,8 @@ class Game : public AMode {
 
 	vector<Sprite> background;
 	EnemyController enemiess;
+	ShieldController shields;
+
 
 	vector<float> bgTimers;
 	vector<float> scrollSpeeds;
@@ -34,12 +40,15 @@ class Game : public AMode {
 	float difficulty;
 
 	Player player;
+	Sprite shield;
 	Text scoreindicator;
 	Text scoreCounter;
 
 	bool musicPaused;
 	
 	IAudioMgr* pAudio;
+
+	lua_State* ls_score;
 
 public:
 
@@ -59,6 +68,8 @@ public:
 	void Render(float dTime, MyD3D& d3d) override;
 
 	std::string GetMName() const override;
+
+	wstring StringToWString(const string& str);
 
 
 

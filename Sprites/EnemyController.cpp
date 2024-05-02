@@ -45,15 +45,15 @@ EnemyController::EnemyController() {
 
 }
 
-void EnemyController::SpawnEnemies(MyD3D& d3d) {
+void EnemyController::SpawnEnemies(MyD3D& d3d, lua_State* ls_textures) {
 	for (int i = 0; i < 5; i++) {
 		enemies.push_back(Enemy::Enemy());
 	}
 
 	//Assigns random pos and speed at spawn
 	for (int i = 0; i < enemies.size(); i++) {
-		enemies[i].createSprite(d3d, L"bin/data/Entities/penguinplane_backwards.dds", Vector2(-400, 250), true, 3.5f, true, 3, 10.0f);
 
+		enemies[i].createSpriteFromLua(d3d, LuaGetSpriteInfo(ls_textures, "enemy"));
 		enemies[i].respawnTimer = randomNumber(7, 2);
 		enemies[i].pos.y = randomNumber(450, -140);
 		enemies[i].moveSpeed = randomNumber(800, 500);

@@ -8,57 +8,78 @@ Game::Game(MyD3D& d3d)
 
 	DDS_ALPHA_MODE alpha;
 
-	bgScale = 6;
+	bgScale = LuaGetFloat(GameManager::Get().ls_textures, "backgroundsScale");
 	scoreMultiplier = 10;
 	difficultyMultiplier = 10;
 
 	//Add background
 	background.push_back(Sprite::Sprite());
-	background[0].createSprite(d3d, L"bin/data/Background/sky.dds", Vector2(0, 0), false, bgScale);
+	background[0].createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "background0"));
 	background[0].sprRect.right *= 2;
 	bgTimers.push_back(0);
-	scrollSpeeds.push_back(100);
+	scrollSpeeds.push_back(LuaGetFloat(GameManager::Get().ls_textures, "bg0scrollspeed"));
 
 	background.push_back(Sprite::Sprite());
-	background[1].createSprite(d3d, L"bin/data/Background/TinyCloud5.dds", Vector2(0, 0), true, bgScale);
+	background[1].createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "background1"));
 	background[1].sprRect.right *= 2;
 	bgTimers.push_back(0);
-	scrollSpeeds.push_back(110);
+	scrollSpeeds.push_back(LuaGetFloat(GameManager::Get().ls_textures, "bg1scrollspeed"));
 
 	background.push_back(Sprite::Sprite());
-	background[2].createSprite(d3d, L"bin/data/Background/SmallCloud3.dds", Vector2(0, 0), true, bgScale);
+	background[2].createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "background2"));
 	background[2].sprRect.right *= 2;
 	bgTimers.push_back(0);
-	scrollSpeeds.push_back(140);
+	scrollSpeeds.push_back(LuaGetFloat(GameManager::Get().ls_textures, "bg2scrollspeed"));
 
 	background.push_back(Sprite::Sprite());
-	background[3].createSprite(d3d, L"bin/data/Background/MedCloud5.dds", Vector2(0, 0), true, bgScale);
+	background[3].createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "background3"));
 	background[3].sprRect.right *= 2;
 	bgTimers.push_back(0);
-	scrollSpeeds.push_back(170);
+	scrollSpeeds.push_back(LuaGetFloat(GameManager::Get().ls_textures, "bg3scrollspeed"));
 
 	background.push_back(Sprite::Sprite());
-	background[4].createSprite(d3d, L"bin/data/Background/BigCloud3.dds", Vector2(0, 0), true, bgScale);
+	background[4].createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "background4"));
 	background[4].sprRect.right *= 2;
 	bgTimers.push_back(0);
-	scrollSpeeds.push_back(200);
+	scrollSpeeds.push_back(LuaGetFloat(GameManager::Get().ls_textures, "bg4scrollspeed"));
 
 
 	//Make player texture
-	player.createSprite(d3d, L"bin/data/Entities/birdneutralsprite.dds", Vector2(200, 100), true, 5.0f, true, 5, 10.0f);
-	player.moveSpeed = 650.0f;
+	player.createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "player"));
 
-	enemiess.SpawnEnemies(d3d);
+	BasicSpriteDetails shieldDetails = LuaGetBasicSpriteInfo(GameManager::Get().ls_textures, "outsideShield");
+	player.outsideShield.createSprite(d3d, shieldDetails.TexLoc, player.pos, true, shieldDetails.scale);
+	player.outsideShield.isVisible = false;
+
+	player.shieldTimeIndicator.createText(d3d, L"Shield remaining:", Vector2(50, 600), Color::Color(Colors::White), 1);
+	player.shieldTimeRemaining.createText(d3d, L"0", Vector2(500, 600), Color::Color(Colors::White), 1);
+
+	player.shieldTimeIndicator.isVisible = false;
+	player.shieldTimeRemaining.isVisible = false;
+
+	enemiess.SpawnEnemies(d3d, GameManager::Get().ls_textures);
+
+	shields.SpawnShields(d3d, GameManager::Get().ls_textures);
+
+	ls_score = luaL_newstate();
+	luaL_openlibs(ls_score);
+
+	if (!LuaOK(ls_score, luaL_dofile(ls_score, "bin/scripts/Score.lua")))
+		assert(false);
 
 	scoreindicator.createText(d3d, L"Score:", Vector2(50, 20), Color::Color(Colors::White), 1);
 
-	scoreCounter.createText(d3d, L"000", Vector2(230, 20), Color::Color(Colors::White), 1);
+
+	//scoreCounter = Text::Text(ls_score);
+	scoreCounter.createTextFromLua(d3d, LuaGetTextDetails(ls_score, "scoreText"), ls_score);
 
 	score = 0;
 	difficulty = 0;
 
 	pAudio = &GameManager::Get().audio;
-	
+
+
+
 }
 
 void Game::Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m_keyboard, std::unique_ptr<DirectX::Mouse>& m_mouse)
@@ -83,15 +104,18 @@ void Game::Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m
 		difficulty += difficultyMultiplier * dTime;
 		player.HandleMovement(kb, dTime);
 
-		player.HandleCollisions(enemiess.enemies);// enemies);
+		player.HandleEnemyCollision(enemiess.enemies);
+		player.HandleShieldCollision(shields);
 
-		player.Update();
+		//LuaCallCFunc(player.ls_player, "UpdatePlayer", dTime);
+		player.Update(dTime);
 
 		enemiess.EnemySpawn(dTime, difficulty);
 
-		score += scoreMultiplier * dTime;
+		shields.ShieldUpdate(dTime, difficulty);
 
-		scoreCounter.changeText(std::to_wstring((int)score));
+		//This updates the score and updates the text on screen as well.
+		LuaCallScoreUpdate(ls_score, dTime);
 	}
 
 
@@ -113,8 +137,12 @@ void Game::Render(float dTime, MyD3D& d3d)
 	}
 
 	player.RenderSprite();
-	enemiess.RenderEnemies();
+	player.outsideShield.RenderSprite();
+	player.shieldTimeIndicator.write();
+	player.shieldTimeRemaining.write();
 
+	enemiess.RenderEnemies();
+	shields.RenderShield();
 	//Draw text on screen
 	scoreindicator.write();
 	scoreCounter.write();
@@ -146,17 +174,20 @@ void Game::Render(float dTime, MyD3D& d3d)
 void Game::ReleaseGame(MyD3D& d3d) {
 	//Release/reset game
 	enemiess.enemies.clear();
-	player.pos = Vector2(200, 100);
 	if (background.empty() == false) {
 		for (int i = 0; i < background.size(); i++) {
 			background[i].pos = Vector2(0, 0);
 		}
 	}
-	enemiess.SpawnEnemies(d3d);
+	enemiess.SpawnEnemies(d3d, GameManager::Get().ls_textures);
+	shields.SpawnShields(d3d, GameManager::Get().ls_textures);
+
 	player.isAlive = true;
 	player.isVisible = true;
 	score = 0;
 	difficulty = 0;
+
+	LuaCallBasicFunction(player.ls_player, "ResetPlayer");
 }
 
 

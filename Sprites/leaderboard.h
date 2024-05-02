@@ -28,7 +28,7 @@ class Leaderboard : public AMode{
 
 	vector<float> bgTimers;
 	vector<float> scrollSpeeds;
-	float bgScale = 6;
+	float bgScale;
 
 	Button mmBtn;
 	Button quitBtn;

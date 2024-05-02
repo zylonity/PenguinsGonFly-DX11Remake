@@ -16,6 +16,9 @@
     <Filter Include="Audio">
       <UniqueIdentifier>{c47edbe0-86ae-481c-9e34-efa10b37db68}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lua Scripts">
+      <UniqueIdentifier>{82ea4f1d-c1c5-41fb-8898-6f54cfc2694f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="D3D.cpp">
@@ -71,6 +74,12 @@
     </ClCompile>
     <ClCompile Include="FileUtils.cpp">
       <Filter>Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="LuaSource.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Shield.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -128,5 +137,26 @@
     <ClInclude Include="FileUtils.h">
       <Filter>Audio</Filter>
     </ClInclude>
+    <ClInclude Include="LuaHelper.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Shield.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\bin\bin\scripts\LuaScript.lua">
+      <Filter>Lua Scripts</Filter>
+    </None>
+    <None Include="..\bin\bin\scripts\TextureLoader.lua">
+      <Filter>Lua Scripts</Filter>
+    </None>
+    <None Include="packages.config" />
+    <None Include="..\bin\bin\scripts\Player.lua">
+      <Filter>Lua Scripts</Filter>
+    </None>
+    <None Include="..\bin\bin\scripts\Score.lua">
+      <Filter>Lua Scripts</Filter>
+    </None>
   </ItemGroup>
 </Project>

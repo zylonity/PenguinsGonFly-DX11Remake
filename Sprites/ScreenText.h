@@ -11,7 +11,7 @@
 #include "DDSTextureLoader.h"
 #include "CommonStates.h"
 #include "Keyboard.h"
-
+#include "LuaHelper.h"
 
 using namespace std;
 using namespace DirectX;
@@ -31,7 +31,8 @@ protected:
 
 	DirectX::Keyboard::KeyboardStateTracker m_keys;
 
-	
+
+	Dispatcher disp;
 
 	int currentChar;
 
@@ -57,8 +58,10 @@ public:
 
 	void write();
 
+	void createTextFromLua(MyD3D& d3dToPass, TextDetails txtDeets, lua_State* L);
+	int changeTextLua(int textt);
 
-
+	void Init(Dispatcher& disp);
 
 
 };

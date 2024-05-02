@@ -8,6 +8,13 @@
 GameManager::GameManager(MyD3D& d3d)
 	: mD3D(d3d)
 {
+	ls_textures = luaL_newstate();
+	luaL_openlibs(ls_textures);
+
+	if (!LuaOK(GameManager::Get().ls_textures, luaL_dofile(GameManager::Get().ls_textures, "bin/scripts/TextureLoader.lua")))
+		assert(false);
+
+
 	audio.Initialise();
 
 	mMMgr.AddMode(new MainMenu(d3d));
@@ -19,6 +26,7 @@ GameManager::GameManager(MyD3D& d3d)
 
 	music_mute = false;
 	music_volume = 50.0f;
+
 
 	
 }
@@ -38,6 +46,8 @@ void GameManager::Release()
 	
 
 	mMMgr.Release();
+
+	lua_close(ls_textures);
 
 }
 

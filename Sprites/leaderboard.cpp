@@ -5,36 +5,38 @@ Leaderboard::Leaderboard(MyD3D& d3d)
 {
 	DDS_ALPHA_MODE alpha;
 
+	bgScale = LuaGetFloat(GameManager::Get().ls_textures, "backgroundsScale");
 
+	//Add background
 	background.push_back(Sprite::Sprite());
-	background[0].createSprite(d3d, L"bin/data/Background/sky.dds", Vector2(0, 0), false, bgScale);
+	background[0].createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "lb_background0"));
 	background[0].sprRect.right *= 2;
 	bgTimers.push_back(0);
-	scrollSpeeds.push_back(100);
+	scrollSpeeds.push_back(LuaGetFloat(GameManager::Get().ls_textures, "lb_bg0scrollspeed"));
 
 	background.push_back(Sprite::Sprite());
-	background[1].createSprite(d3d, L"bin/data/Background/TinyCloud5.dds", Vector2(0, 0), true, bgScale);
+	background[1].createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "lb_background1"));
 	background[1].sprRect.right *= 2;
 	bgTimers.push_back(0);
-	scrollSpeeds.push_back(110);
+	scrollSpeeds.push_back(LuaGetFloat(GameManager::Get().ls_textures, "lb_bg1scrollspeed"));
 
 	background.push_back(Sprite::Sprite());
-	background[2].createSprite(d3d, L"bin/data/Background/SmallCloud3.dds", Vector2(0, 0), true, bgScale);
+	background[2].createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "lb_background2"));
 	background[2].sprRect.right *= 2;
 	bgTimers.push_back(0);
-	scrollSpeeds.push_back(140);
+	scrollSpeeds.push_back(LuaGetFloat(GameManager::Get().ls_textures, "lb_bg2scrollspeed"));
 
 	background.push_back(Sprite::Sprite());
-	background[3].createSprite(d3d, L"bin/data/Background/MedCloud5.dds", Vector2(0, 0), true, bgScale);
+	background[3].createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "lb_background3"));
 	background[3].sprRect.right *= 2;
 	bgTimers.push_back(0);
-	scrollSpeeds.push_back(170);
+	scrollSpeeds.push_back(LuaGetFloat(GameManager::Get().ls_textures, "lb_bg3scrollspeed"));
 
 	background.push_back(Sprite::Sprite());
-	background[4].createSprite(d3d, L"bin/data/Background/BigCloud3.dds", Vector2(0, 0), true, bgScale);
+	background[4].createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "lb_background4"));
 	background[4].sprRect.right *= 2;
 	bgTimers.push_back(0);
-	scrollSpeeds.push_back(200);
+	scrollSpeeds.push_back(LuaGetFloat(GameManager::Get().ls_textures, "lb_bg4scrollspeed"));
 
 	quitBtn.createSprite(d3d, L"bin/data/Buttons/quitbutton.dds", Vector2(1160, 630), true, 3);
 	mmBtn.createSprite(d3d, L"bin/data/Buttons/mainmenu1.dds", Vector2(150, 630), true, 3);

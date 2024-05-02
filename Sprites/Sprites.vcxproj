@@ -66,7 +66,8 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalOptions>/wd4005 %(AdditionalOptions)</AdditionalOptions>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <AdditionalIncludeDirectories>..\..\..\DirectXTK\Inc</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>
+      </AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -108,11 +109,13 @@
     <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="GameOver.cpp" />
     <ClCompile Include="leaderboard.cpp" />
+    <ClCompile Include="LuaSource.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="ModeMgr.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ScreenText.cpp" />
+    <ClCompile Include="Shield.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="WindowUtils.cpp" />
   </ItemGroup>
@@ -129,14 +132,30 @@
     <ClInclude Include="GameManager.h" />
     <ClInclude Include="GameOver.h" />
     <ClInclude Include="leaderboard.h" />
+    <ClInclude Include="LuaHelper.h" />
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ScreenText.h" />
+    <ClInclude Include="Shield.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="WindowUtils.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\bin\bin\scripts\LuaScript.lua" />
+    <None Include="..\bin\bin\scripts\Player.lua" />
+    <None Include="..\bin\bin\scripts\Score.lua" />
+    <None Include="..\bin\bin\scripts\TextureLoader.lua" />
+    <None Include="packages.config" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
+    <Import Project="..\packages\directxtk_desktop_win10.2024.2.22.1\build\native\directxtk_desktop_win10.targets" Condition="Exists('..\packages\directxtk_desktop_win10.2024.2.22.1\build\native\directxtk_desktop_win10.targets')" />
   </ImportGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\directxtk_desktop_win10.2024.2.22.1\build\native\directxtk_desktop_win10.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\directxtk_desktop_win10.2024.2.22.1\build\native\directxtk_desktop_win10.targets'))" />
+  </Target>
 </Project>
