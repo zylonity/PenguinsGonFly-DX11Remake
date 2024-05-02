@@ -59,7 +59,7 @@ DirectX::SimpleMath::Vector2 LuaMovePlayer(lua_State* L, bool& up, bool& down, b
 void LuaCallScoreUpdate(lua_State* L, float& deltaTime);
 
 
-void LuaCallCFunc(lua_State* L, const std::string& name, float& deltaTime);
+void LuaCallCFunc(lua_State* L, const std::string& name);
 
 void LuaCallBasicFunction(lua_State* L, const std::string& fname);
 
@@ -68,6 +68,8 @@ public:
 	struct Command {
 		typedef std::function<void(float)> voidFloatFunc;
 		voidFloatFunc voidFloatFunction;
+		typedef std::function<void(int)> voidIntFunc;
+		voidIntFunc voidIntFunction;
 	};
 
 	void Init(lua_State* L) {

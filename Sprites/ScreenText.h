@@ -31,7 +31,8 @@ protected:
 
 	DirectX::Keyboard::KeyboardStateTracker m_keys;
 
-	
+
+	Dispatcher disp;
 
 	int currentChar;
 
@@ -57,9 +58,10 @@ public:
 
 	void write();
 
-	void Text::createTextFromLua(MyD3D& d3dToPass, TextDetails txtDeets);
-	void Text::changeTextStr(string strText);
+	void createTextFromLua(MyD3D& d3dToPass, TextDetails txtDeets, lua_State* L);
+	int changeTextLua(int textt);
 
+	void Init(Dispatcher& disp);
 
 
 };

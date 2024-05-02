@@ -1,4 +1,5 @@
 #include "ScreenText.h"
+#include "GameManager.h"
 
 using namespace std;
 using namespace DirectX;
@@ -27,7 +28,7 @@ void Text::createText(MyD3D& d3dToPass, wstring textt, Vector2 posToPass, Color 
 
 }
 
-void Text::createTextFromLua(MyD3D& d3dToPass, TextDetails txtDeets) {
+void Text::createTextFromLua(MyD3D& d3dToPass, TextDetails txtDeets, lua_State* L) {
 
 	wstring widestr;
 	for (int i = 0; i < txtDeets.text.length(); ++i)
@@ -42,6 +43,8 @@ void Text::createTextFromLua(MyD3D& d3dToPass, TextDetails txtDeets) {
 	spriteFont = std::make_unique<SpriteFont>(&d3dToPass.GetDevice(), L"bin/data/Fonts/pixeled.spritefont");
 	spriteBatch = std::make_unique<SpriteBatch>(&d3dToPass.GetDeviceCtx());
 
+	disp.Init(L);
+	Init(disp);
 
 }
 
@@ -59,6 +62,10 @@ void Text::changeText(wstring textt) {
 	text = textt;
 }
 
+int Text::changeTextLua(int textt) {
+	text = std::to_wstring(textt) ;
+	return 1;
+}
 
 //Allows input of text into itself, sets _ as a placeholder for each character
 void Text::InputMode(int charLimit, std::unique_ptr<DirectX::Keyboard>& m_keyboard) {
@@ -195,4 +202,9 @@ void Text::InputMode(int charLimit, std::unique_ptr<DirectX::Keyboard>& m_keyboa
 
 
 
+}
+
+void Text::Init(Dispatcher& disp) {
+	Dispatcher::Command::voidIntFunc f{ [this](int score) {return changeTextLua(score); } };
+	disp.Register("changeTextLua", Dispatcher::Command{ f });
 }

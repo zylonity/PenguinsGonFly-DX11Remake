@@ -249,13 +249,12 @@ void LuaCallScoreUpdate(lua_State* L, float& deltaTime) {
 		assert(false);
 }
 
-void LuaCallCFunc(lua_State* L, const std::string& fname, float& deltaTime) {
+void LuaCallCFunc(lua_State* L, const std::string& fname) {
 	lua_getglobal(L, fname.c_str());
 	if (!lua_isfunction(L, -1))
 		assert(false);
 
-	lua_pushnumber(L, deltaTime);
-	if (!LuaOK(L, lua_pcall(L, 1, 0, 0)))
+	if (!LuaOK(L, lua_pcall(L, 0, 0, 0)))
 		assert(false);
 }
 
@@ -269,6 +268,11 @@ int Dispatcher::LuaCall(lua_State* L) {
 	if (cmd.voidFloatFunction) {
 		int param = lua_tonumber(L, 2);
 		cmd.voidFloatFunction(param);
+		lua_pop(L, 1);
+	}
+	else if (cmd.voidIntFunction) {
+		int param = lua_tointeger(L, 2);
+		cmd.voidIntFunction(param);
 		lua_pop(L, 1);
 	}
 	else

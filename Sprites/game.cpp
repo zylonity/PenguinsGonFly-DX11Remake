@@ -69,7 +69,9 @@ Game::Game(MyD3D& d3d)
 
 	scoreindicator.createText(d3d, L"Score:", Vector2(50, 20), Color::Color(Colors::White), 1);
 
-	scoreCounter.createTextFromLua(d3d, LuaGetTextDetails(ls_score, "scoreText"));
+
+	//scoreCounter = Text::Text(ls_score);
+	scoreCounter.createTextFromLua(d3d, LuaGetTextDetails(ls_score, "scoreText"), ls_score);
 
 	score = 0;
 	difficulty = 0;
@@ -112,9 +114,8 @@ void Game::Update(float dTime, MyD3D& d3d, std::unique_ptr<DirectX::Keyboard>& m
 
 		shields.ShieldUpdate(dTime, difficulty);
 
+		//This updates the score and updates the text on screen as well.
 		LuaCallScoreUpdate(ls_score, dTime);
-
-		scoreCounter.changeText(std::to_wstring((int)LuaGetFloat(ls_score, "score")));
 	}
 
 
