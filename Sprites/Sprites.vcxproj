@@ -115,6 +115,7 @@
     <ClCompile Include="ModeMgr.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="ScreenText.cpp" />
+    <ClCompile Include="Shield.cpp" />
     <ClCompile Include="sprite.cpp" />
     <ClCompile Include="WindowUtils.cpp" />
   </ItemGroup>
@@ -135,6 +136,7 @@
     <ClInclude Include="MainMenu.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="ScreenText.h" />
+    <ClInclude Include="Shield.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="sprite.h" />
     <ClInclude Include="WindowUtils.h" />

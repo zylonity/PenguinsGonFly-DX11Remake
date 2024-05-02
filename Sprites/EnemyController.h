@@ -25,7 +25,7 @@ public:
 	vector<Enemy> enemies;
 	EnemyController();
 
-	void SpawnEnemies(MyD3D& d3d);
+	void SpawnEnemies(MyD3D& d3d, lua_State* ls_textures);
 
 	void EnemySpawn(float dTime, float difficulty);
 	void RenderEnemies();

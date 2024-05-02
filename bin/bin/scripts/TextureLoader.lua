@@ -69,9 +69,9 @@ gmo_bg4scrollspeed = bg4scrollspeed
 
 
 
--- Player Sprite
+-- Player and enemy sprites
 player = {TexLoc = "bin/data/Entities/birdneutralsprite.dds", PosX = 200, PosY = 100, IsAlpha = true, Scale = 5, IsAnim = true, NumSprites = 5, AnimSpeed = 10}
-
+enemy = {TexLoc = "bin/data/Entities/penguinplane_backwards.dds", PosX = -400, PosY = 250, IsAlpha = true, Scale = 3.5, IsAnim = true, NumSprites = 3, AnimSpeed = 10}
 
 -- Button textures!
 -- TexLoc: String with the location of the texture

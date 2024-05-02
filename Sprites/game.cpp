@@ -47,7 +47,7 @@ Game::Game(MyD3D& d3d)
 	//Make player texture
 	player.createSpriteFromLua(d3d, LuaGetSpriteInfo(GameManager::Get().ls_textures, "player"));
 
-	enemiess.SpawnEnemies(d3d);
+	enemiess.SpawnEnemies(d3d, GameManager::Get().ls_textures);
 
 	ls_score = luaL_newstate();
 	luaL_openlibs(ls_score);
@@ -158,7 +158,7 @@ void Game::ReleaseGame(MyD3D& d3d) {
 			background[i].pos = Vector2(0, 0);
 		}
 	}
-	enemiess.SpawnEnemies(d3d);
+	enemiess.SpawnEnemies(d3d, GameManager::Get().ls_textures);
 	player.isAlive = true;
 	player.isVisible = true;
 	score = 0;
